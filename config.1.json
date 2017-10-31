@@ -1,0 +1,102 @@
+{
+    "device": {
+        "hiotId": "ABCDEF1234567890",
+        "name": "second device",
+        "description": "programatically create a device"
+    },
+    "roleChannels": {
+        "broker": [
+            {
+                "_id": "59bfe474f63825415c5233dc",
+                "deployment": "597f3056ef66be0648ef5bd3",
+                "description": "Office B14 - Research Meeting Room 2 - HVAC and Lighting",
+                "__v": 0,
+                "topic": "c/b14/l",
+                "added": null,
+                "active": true,
+                "myPaths": [{
+                        "in":"1/1/1/#",
+                        "out":"1/1/2/3" 
+                    },
+                    {
+                       "in":"1/2/2/#",
+                       "out":"1/3/3/3"
+                    },
+                    {
+                        "in":"1/3/8/#",
+                        "out":"1/3/6"
+                    },
+                    {
+                       "in": "1/4/8/5/+",
+                       "out":"1/9/6/4"
+                    } ]
+            }],
+        "coordinator": {
+            "m2mMqttServer":"localhost",
+            "m2mMqttport":1882
+        },
+        "controller": [
+            {
+                "_id": "59c393ee54674b1ce4982a69",
+                "description": "Lighting controller - First Floor",
+                "name": "LWRF - F1",
+                "__v": 0,
+                "deployment": "597f3056ef66be0648ef5bd3",
+                "controllerId": "cont1203",
+                "channel": "c/1/1/f1",
+                "handler": "59bfda6ed7649a3070551ad9",
+                "added": null
+            }
+        ],
+        "aggregator": [
+            {
+                "_id": "59db76cdccc548be30e5249f",
+                "handler": "59bfdae2d7649a3070551ade",
+                "name": "Aggregator1",
+                "channel": "a/1/2/3/4",
+                "description": "some random aggregator",
+                "poll": 60000,
+                "deployment": "597f3056ef66be0648ef5bd3",
+                "active": true,
+                "__v": 0,
+                "topics": [
+                    "s/12/3/4",
+                    "s/4/5/22",
+                    "s/3/4/5"
+                ]
+            }
+        ],
+        "sensor": [
+            {
+                "_id": "59db98407e3a9fb060064ebf",
+                "id": "sn1234",
+                "name": "first real sensor",
+                "channel": "s/1/2/3/4/5/6/7/8/8/9/9/9/9",
+                "description": "some random sensor",
+                "handler": "59db908c327a46cb841ac004",
+                "poll": 60000,
+                "config": {
+                    "min": 1234,
+                    "range": 100
+                },
+                "location": "59bfd3ba9db46f37b858ed29",
+                "active": true,
+                "__v": 0
+            }
+        ]
+    },
+    "moscaEnabled": true,
+    "moscaPort": 1833,
+    "mqttServers": [
+        {
+            "mqttServerIP": "127.0.0.1",
+            "mqttServerPort": "1833",
+            "priority": 1
+        },
+        {
+            "mqttServerIP": "10.0.0.1",
+            "mqttServerPort": "1833",
+            "priority": 1
+        }
+    ]
+}
