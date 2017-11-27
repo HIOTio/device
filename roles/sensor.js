@@ -36,6 +36,8 @@ function init(sensorList,mqttServer){
         
         // Create a handler for this topic 
         senHandlers[sensorList[i].channel] = require("../handlers/" + sensorList[i].handler)
+        console.log("setting up sensor");
+        console.log(sensorList[i]);
         console.log("Added Handler " + sensorList[i].handler + " for sensor topic " + sensorList[i].channel)
         // setInterval for the Poll function on each aggregator
          console.log("Setting up publication for " + sensorList[i].channel)
