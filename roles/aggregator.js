@@ -27,6 +27,12 @@ function addSubscriptions(subs){
    
 }
 function init(aggList,mqttServer){
+var aggHandlers=[];
+var aggSubs=[];
+for (var key in timers){
+    timers[key].delete;
+}
+var timers = [];
     //connect to the mqtt broker
     mqttClient= mqtt.connect ({
         server:mqttServer[0].server, 

@@ -1,4 +1,3 @@
-
 /*
     Publish readings from a sensor
     import sensor config
@@ -17,49 +16,58 @@
             }
         }
 */
-var mqtt= require('mqtt')
-var mqttClient={}
-var senHandlers=[]
+var mqtt = require('mqtt')
+var mqttClient = {}
+var senHandlers = []
 var timers = [] // need this to track the polling and remove them 
-module.exports={
-    init:init,
-    reset: reset
-}
-function init(sensorList,mqttServer){
-    //connect to the mqtt broker
-    mqttClient= mqtt.connect ({
-        server:mqttServer[0].server, 
-        port:mqttServer[0].port})
-    // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
-    // need to have a many to many between topics and handlers
-    for(var i=0;i<sensorList.length;i++){
-        
-        // Create a handler for this topic 
-        senHandlers[sensorList[i].channel] = require("../handlers/" + sensorList[i].handler)
-        console.log("setting up sensor");
-        console.log(sensorList[i]);
-        console.log("Added Handler " + sensorList[i].handler + " for sensor topic " + sensorList[i].channel)
-        // setInterval for the Poll function on each aggregator
-         console.log("Setting up publication for " + sensorList[i].channel)
-        timers.push(setInterval(
-            function (sensor,handlers) {
-                return function(){
-                console.log("Publishing on Sensor Channel " + sensor.channel)
-                mqttClient.publish(sensor.channel,senHandlers[sensor.channel].poll(sensor))
-          }}
-          (sensorList[i],senHandlers),
-      
-          sensorList[i].poll))
-        console.log("Finished setting up sensor")
-    }
- 
-}
-function reset(sensor,mqttServer){
-
-    //disconnect from the mqtt broker
-
-    //clear all timers
-    //set up aggregators
-    init(sensor,mqttServer)
+module.exports = {
+  init: init,
+  reset: reset
 }
 
+function init(sensorList, mqttServer) {
+  // kill any existing timers - if we're reloading the config
+  console.log(sensorList);
+  for (var key in timers) {
+    clearInterval(timers[key]);
+    timers[key].delete;
+  }
+  //connect to the mqtt broker
+  mqttClient = mqtt.connect({
+    server: mqttServer[0].server,
+    port: mqttServer[0].port
+  })
+  // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
+  // need to have a many to many between topics and handlers
+  for (var i = 0; i < sensorList.length; i++) {
+
+    // Create a handler for this topic 
+    senHandlers[sensorList[i].channel] = require("../handlers/" + sensorList[i].handler)
+    console.log("setting up sensor");
+    console.log(sensorList[i]);
+    console.log("Added Handler " + sensorList[i].handler + " for sensor topic " + sensorList[i].channel)
+    // setInterval for the Poll function on each aggregator
+    console.log("Setting up publication for " + sensorList[i].channel)
+    timers.push(setInterval(
+      function (sensor, handlers) {
+        return function () {
+          console.log("Publishing on Sensor Channel " + sensor.channel + " every " + sensor.poll/1000 + " seconds");
+          mqttClient.publish(sensor.channel, senHandlers[sensor.channel].poll(sensor));
+        }
+      }
+      (sensorList[i], senHandlers),
+
+      sensorList[i].poll))
+    console.log("Finished setting up sensor")
+  }
+
+}
+
+function reset(sensor, mqttServer) {
+
+  //disconnect from the mqtt broker
+
+  //clear all timers
+  //set up aggregators
+  init(sensor, mqttServer)
+}

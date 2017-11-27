@@ -1,4 +1,5 @@
 var handler = require('./handler');
+var fs = require('fs');
 //NOTE: need this up here to set some config details (e.g. device id and mqtt address)
 
 /*
@@ -84,7 +85,8 @@ function getRoles(){
 module.exports={
   getConfig: function(){
     //reload the configuration from disk
-    var confTemp=require('./config.json');
+    var confTemp=JSON.parse(fs.readFileSync('./config.json', "utf8"));
+    console.log(confTemp);
     _config.roleChannels=confTemp.roleChannels,
     _config.moscaEnabled=confTemp.moscaEnabled,
     _config.moscaPort=confTemp.moscaPort,
@@ -98,6 +100,7 @@ module.exports={
       moscaPort:_config.moscaPort,
       mqttServers:_config.mqttServers
     };
+    
   },
   setConfig: function(config){
     //need some validation in here

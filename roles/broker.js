@@ -81,20 +81,32 @@ var channelsDown = [
     resp: false
   }
 ]
-var myPaths = []
-var responsesNeeded = []
-var publications = []
-var subscriptions = []
-var subscriptionsUp=[]
-var handlers = []
-var mqttClient = {}
-var timers = [] // need this to track the polling and remove them 
+var myPaths = [];
+var responsesNeeded = [];
+var publications = [];
+var subscriptions = [];
+var subscriptionsUp=[];
+var handlers = [];
+var mqttClient = {};
+var timers = []; // need this to track the polling and remove them 
 module.exports = {
   init: init,
   reset: reset
 }
 
 function init(brokers, mqttServer) {
+  myPaths = [];
+  responsesNeeded = [];
+  publications = [];
+  subscriptions = [];
+  subscriptionsUp=[];
+  handlers = [];
+  mqttClient = {};
+  for (var key in timers) {
+    delete timers[ch][_topic];
+}
+  
+  timers = [];
   //connect to the mqtt broker
   mqttClient = mqtt.connect({
     server: mqttServer[0].server,

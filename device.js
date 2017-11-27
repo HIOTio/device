@@ -12,9 +12,7 @@ var mqttClient = {}
 
 
 function init(mqttServer, device, em) {
-  em.on('confUpdate', function () {
-    console.log("I picked up the event");
-  })
+
   //connect to the mqtt broker
   mqttClient = mqtt.connect({
     server: mqttServer[0].server,
@@ -29,7 +27,7 @@ function init(mqttServer, device, em) {
       if (message.set) {
         //have a new config
         var conf = message.conf
-        console.log("event emited");
+        console.log("*************** Resetting device config **********************");
 
         fs.writeFileSync('./config.json', JSON.stringify(conf));
         em.emit('confUpdated');
