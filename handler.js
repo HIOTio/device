@@ -30,6 +30,7 @@ this.clearHandlers = function () {
 this.getHandler = function (handle) {
   // TODO: error handling if handler cannot be found
   if(!handlers[handle]){
+    return null;
   }
   return handlers[handle]
 }
