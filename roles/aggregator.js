@@ -20,9 +20,11 @@ var mqttClient={}
 var aggHandlers=[]
 var aggSubs=[]
 var timers = [] // need this to track the polling and remove them 
-module.exports={
-    init:init,
-    reset: reset
+function addSubscriptions(subs){
+    for(var i=0;i<subs.length;i++){
+        mqttClient.subscribe(subs[i])
+    }
+   
 }
 function init(aggList,mqttServer){
     //connect to the mqtt broker
@@ -108,9 +110,8 @@ function reset(aggList,mqttServer){
     init(aggList,mqttServer)
 }
 
-function addSubscriptions(subs){
-    for(var i=0;i<subs.length;i++){
-        mqttClient.subscribe(subs[i])
-    }
-   
+
+module.exports={
+    init:init,
+    reset: reset
 }

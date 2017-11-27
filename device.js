@@ -9,9 +9,7 @@ var mqtt = require('mqtt');
 var base64 = require('file-base64');
 var fs = require('fs');
 var mqttClient = {}
-module.exports = {
-  init: init
-}
+
 
 function init(mqttServer, device, em) {
   em.on('confUpdate', function () {
@@ -41,4 +39,7 @@ function init(mqttServer, device, em) {
       console.log(err);
     }
   })
+}
+module.exports = {
+  init: init
 }

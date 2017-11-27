@@ -11,9 +11,7 @@ var device = require('./device')
 em.on('confUpdate',function(){
     console.log("need to reload config")
 })
-em.addListener('confUpdated', function (data) {
-    reset()
-});
+
 //call this on startup and after config has changed
 function reload(){
 // Load config
@@ -47,3 +45,6 @@ function reset(){
 
 }
 reload()
+em.addListener('confUpdated', function (data) {
+    reset()
+});

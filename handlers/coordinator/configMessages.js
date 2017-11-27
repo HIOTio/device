@@ -40,13 +40,7 @@ function saveConfig(conf){
       //NOTE: passing files from config, structure config.files=[{location:'',file:''}]
       for (var a = 0; a < config.files.length; a++) {
         var location ='./handlers/' + config.files[a].location;
-        base64.decode(config.files[a].file,  location, function (err, output) {
-          if(err){
-        //    console.log(err)
-          }
-     //     console.log('file written to ' + location);
-          setConfig(conf);
-        });
+        base64.decode(config.files[a].file,  location, null);
       }
     })
   }

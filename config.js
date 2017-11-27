@@ -96,8 +96,7 @@ module.exports={
       roleChannels:_config.roleChannels,
       moscaEnabled:_config.moscaEnabled,
       moscaPort:_config.moscaPort,
-      mqttServers:_config.mqttServers,
-      device:_config.device
+      mqttServers:_config.mqttServers
     };
   },
   setConfig: function(config){

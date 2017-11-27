@@ -7,8 +7,8 @@ server.on('clientConnected',function(client){
 
 server.on('published',function(packet,client){
 });
+function setup(){
+}
 
 server.on('ready',setup);
 
-function setup(){
-}
