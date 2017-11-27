@@ -1,4 +1,4 @@
-var handler = require('./handler')
+var handler = require('./handler');
 //NOTE: need this up here to set some config details (e.g. device id and mqtt address)
 
 /*
@@ -65,7 +65,7 @@ var _config = {
     name:'',
     description:'',
   }
-}
+};
 function getRoles(){
   var roles={
     broker:false,
@@ -73,12 +73,12 @@ function getRoles(){
     aggregator:false,
     sensor:false,
     controller:false,
-  }
-  if(_config.roleChannels.aggregator) roles.aggregator=true
-  if(_config.roleChannels.broker) roles.broker=true
-  if(_config.roleChannels.coordinator) roles.coordinator=true
-  if(_config.roleChannels.sensor) roles.sensor=true
-  if(_config.roleChannels.controller) roles.controller=true
+  };
+  if(_config.roleChannels.aggregator) roles.aggregator=true;
+  if(_config.roleChannels.broker) roles.broker=true;
+  if(_config.roleChannels.coordinator) roles.coordinator=true;
+  if(_config.roleChannels.sensor) roles.sensor=true;
+  if(_config.roleChannels.controller) roles.controller=true;
   return roles
 }
 module.exports={
@@ -98,7 +98,7 @@ module.exports={
       moscaPort:_config.moscaPort,
       mqttServers:_config.mqttServers,
       device:_config.device
-    }
+    };
   },
   setConfig: function(config){
     //need some validation in here
