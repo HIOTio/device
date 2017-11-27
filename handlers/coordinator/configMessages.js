@@ -8,23 +8,24 @@ This file is responsible for getting & setting device config from the platform
 
 */
 
-
+var fs = require('fs');
 var myConfig={};
 var mqtt = {};
 var mqttServer= {};
-var roles = []
-var subscriptions = []
-var isThing = false
-var isAggregator = false
-var isBroker = false
-var controllerCommands=[]
-var mqttSubscriptions=[]
-var handlers=[]
-var aggregators=[]
-var sensors=[]
-var controllers=[]
-var brokers=[]
-var thing={}
+var roles = [];
+var subscriptions = [];
+var brokerFrom=[];
+var isThing = false;
+var isAggregator = false;
+var isBroker = false;
+var controllerCommands=[];
+var mqttSubscriptions=[];
+var handler=[];
+var aggregators=[];
+var sensors=[];
+var controllers=[];
+var brokers=[];
+var thing={};
 
 function validateConfig(conf){
   //Validate the supplied config and return true if it's OK
@@ -32,9 +33,9 @@ function validateConfig(conf){
 }
 function saveConfig(conf){
   if(validateConfig(conf)){
-    fs.writeFile('./config.json', JSON.stringify(config), function (err) {
+    fs.writeFile("./config.json", JSON.stringify(config), function (err) {
       if (err) {
-        return
+        return;
       }
       //TODO: do some validation etc. here - significant security risk as anyone can push any file to any device as it currently stands
       //NOTE: passing files from config, structure config.files=[{location:'',file:''}]
@@ -42,60 +43,60 @@ function saveConfig(conf){
         var location ='./handlers/' + config.files[a].location;
         base64.decode(config.files[a].file,  location, null);
       }
-    })
+    });
   }
 }
 
-loadConfig=function(){
+function loadConfig(){
   //load the config from file and assign to config
-  var confTemp=require('./config.json');
+  var confTemp=fs.readFileSync("./config.json");
   if(validateConfig(confTemp)){
     setConfig(confTemp);
   }
 }
-setConfig=function(conf){
+function setConfig(conf){
   myConfig=conf;
   updateConfig(conf);
 }
 
-updateConfig = function (conf) {
+function updateConfig(conf) {
  // console.log(myConfig);
-controllerCommands = []
+controllerCommands = [];
   //TODO: [x]need to include a mechanism to pass handler files to the device
   //TODO: [x]need to double-check the logic- _CFG_Set has to run twice before the device_id will change
   if (conf) {
   //  console.log("got new config")
     //TODO: sanity check the config before writing to disk
     //TODO: look at importin npm packages if needed, also look to remove unused packages 
-    myConfig = conf
+    myConfig = conf;
   }
  // console.log(myConfig.device_id)
-  device_id = myConfig.device_id
-  sensors = null
+  device_id = myConfig.device_id;
+  sensors = null;
   if(myConfig.thing){  
-    sensors = myConfig.thing.sensors
+    sensors = myConfig.thing.sensors;
   }
-  device_id = myConfig.device_id
+  device_id = myConfig.device_id;
   
   if(myConfig.thing){  
-    controllers = myConfig.thing.controllers
+    controllers = myConfig.thing.controllers;
   }
-  aggregators = myConfig.aggregators
-  brokers = myConfig.brokers
-  brokerFrom = myConfig.brokerFrom
+  aggregators = myConfig.aggregators;
+  brokers = myConfig.brokers;
+  brokerFrom = myConfig.brokerFrom;
   // unsubscribe from MQTT topics
   //make sure we've set up mqtt first
   if(mqtt){
   for (var ind in subscriptions) {
-    var index = ind
-    delete subscriptions[index]
-    mqtt.unsub(index)
+    var index = ind;
+    delete subscriptions[index];
+    mqtt.unsub(index);
   }
 }
   // clear timers for polling
-  handler.clearHandlers()
+  handler.clearHandlers();
   // add two special channels to get and set configuration
-  subscriptions['_CFG_Set' + device_id] = './handlers/config'
+  subscriptions['_CFG_Set' + device_id] = './handlers/config';
   handler.addHandler('_CFG_Set' + device_id, './handlers/config', null, null)
   subscriptions['_CFG_Get' + device_id] = './handlersr/config'
   handler.addHandler('_CFG_Get' + device_id, './handlers/config', null, null)
