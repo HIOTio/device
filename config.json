@@ -56,11 +56,11 @@
             "name": "Aggregator1",
             "channel": "a/1/2/3/4",
             "description": "some random aggregator",
-            "poll": 60000,
+            "poll": 15000,
             "deployment": "597f3056ef66be0648ef5bd3",
             "active": true,
             "__v": 0,
-            "topics": ["s/12/3/4", "s/4/5/22", "s/3/4/5"]
+            "topics": ["s/1/2/3/4/5/6/7/8/8/9/9/9/9", "s/4/5/22", "s/3/4/5"]
         }],
         "sensor": [{
             "_id": "59db98407e3a9fb060064ebf",
@@ -69,7 +69,7 @@
             "channel": "s/1/2/3/4/5/6/7/8/8/9/9/9/9",
             "description": "some random sensor",
             "handler": "59db908c327a46cb841ac004",
-            "poll": 50000,
+            "poll": 5000,
             "config": {
                 "minValue": 1234,
                 "range": 100

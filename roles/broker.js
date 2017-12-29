@@ -95,6 +95,7 @@ module.exports = {
 }
 
 function init(brokers, mqttServer) {
+  console.log("setting up " + brokers.length + " broker(s)");
   myPaths = [];
   responsesNeeded = [];
   publications = [];
@@ -114,6 +115,7 @@ function init(brokers, mqttServer) {
   })
   //set up all channels for each ACTIVE broker
   for (var j = 0; j < brokers.length; j++) {
+    console.log("connecting to upstream server" + brokers[j].upMqttServers[0]);
     upServer = mqtt.connect({
       server: brokers[j].upMqttServers[0].server,
       port: brokers[j].upMqttServers[0].port

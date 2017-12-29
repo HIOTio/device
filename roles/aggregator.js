@@ -27,8 +27,6 @@ function addSubscriptions(subs){
    
 }
 function init(aggList,mqttServer){
-var aggHandlers=[];
-var aggSubs=[];
 for (var key in timers){
     timers[key].delete;
 }
