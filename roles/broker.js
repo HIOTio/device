@@ -34,7 +34,7 @@
     -- send warning to platform (add "w/" to start of path)
 */
 
-var mqtt = require('mqtt')
+var mqtt = require("mqtt");
 
 var channelsUp = [{
     ch: "X",
@@ -56,7 +56,7 @@ var channelsUp = [{
     resp: true,
     respCh: "h"
   }
-]
+];
 var channelsDown = [
     {
     ch: "x",
@@ -80,7 +80,7 @@ var channelsDown = [
     desc: "warning for platform, e.g. response message is late",
     resp: false
   }
-]
+];
 var myPaths = [];
 var responsesNeeded = [];
 var publications = [];
@@ -89,11 +89,6 @@ var subscriptionsUp=[];
 var handlers = [];
 var mqttClient = {};
 var timers = []; // need this to track the polling and remove them 
-module.exports = {
-  init: init,
-  reset: reset
-}
-
 function init(brokers, mqttServer) {
   console.log("setting up " + brokers.length + " broker(s)");
   myPaths = [];
@@ -103,68 +98,69 @@ function init(brokers, mqttServer) {
   subscriptionsUp=[];
   handlers = [];
   mqttClient = {};
+  if(timers){
   for (var key in timers) {
-    delete timers[ch][_topic];
+    delete timers[key];
 }
-  
+  } 
   timers = [];
   //connect to the mqtt broker
   mqttClient = mqtt.connect({
     server: mqttServer[0].server,
     port: mqttServer[0].port
-  })
+  });
   //set up all channels for each ACTIVE broker
   for (var j = 0; j < brokers.length; j++) {
     console.log("connecting to upstream server" + brokers[j].upMqttServers[0]);
-    upServer = mqtt.connect({
+    let upServer = mqtt.connect({
       server: brokers[j].upMqttServers[0].server,
       port: brokers[j].upMqttServers[0].port
     });
-    upServer.on('message', receiveUpstream);
+    upServer.on("message", receiveUpstream);
     //and for each path in the broker, ignoring inactive ones
     if (brokers[j].active) {
       for (var k = 0; k < brokers[j].myPaths.length; k++) {
 
         for (var i = 0; i < channelsDown.length; i++) {
-          subscriptions.push(channelsDown[i].ch + "/" + brokers[j].myPaths[k].in)
+          subscriptions.push(channelsDown[i].ch + "/" + brokers[j].myPaths[k].in);
         }
         var wildcard = 0
         var _inTopic = brokers[j].myPaths[k].in
         if (_inTopic.endsWith("#")) {
-          wildcard = 2
-          _inTopic = _inTopic.slice(0, _inTopic.length - 2)
+          wildcard = 2;
+          _inTopic = _inTopic.slice(0, _inTopic.length - 2);
         } else if (_inTopic.endsWith("+")) {
-          wildcard = 1
-          _inTopic = _inTopic.slice(0, _inTopic.length - 2)
+          wildcard = 1;
+          _inTopic = _inTopic.slice(0, _inTopic.length - 2);
         } else {
-          _inTopic = _inTopic.slice(0, _inTopic.length - 1)
+          _inTopic = _inTopic.slice(0, _inTopic.length - 1);
         }
         myPaths[_inTopic] = {
           out: brokers[j].myPaths[k].out,
           wildcard: wildcard,
           server: upServer
-        }
+        };
 
       }
     }
   }
   // Subscribe to each topic
-  addSubscriptions(subscriptions)
-  mqttClient.on('message', receiveDownstream);
+  addSubscriptions(subscriptions);
+  mqttClient.on("message", receiveDownstream);
 }
 
 function getChannel(char) {
   for (var i = 0; i < channelsDown.length; i++) {
     if (channelsDown[i].ch == char) {
-      return channelsDown[i]
+      return channelsDown[i];
     }
   }
     for (var i = 0; i < channelsUp.length; i++) {
     if (channelsUp[i].ch == char) {
-      return channelsUp[i]
+      return channelsUp[i];
     }
   }
-  return null
+  return null;
 }
 
 function getOutPath(topic) {
@@ -176,9 +172,9 @@ function getOutPath(topic) {
       return {
         path: myPaths[path].out,
         server: myPaths[path].server
-      }
+      };
     }
-    return null
+    return null;
   }
 }
 
@@ -190,13 +186,13 @@ function reset(aggList, mqttServer) {
   //clear all timers
 
   //set up aggregators
-  init(aggList, mqttServer)
+  init(aggList, mqttServer);
 }
 
 function addSubscriptions(subs) {
   for (var i = 0; i < subs.length; i++) {
-    mqttClient.subscribe(subs[i])
-    console.log("subscribed to topic " + subs[i])
+    mqttClient.subscribe(subs[i]);
+    console.log("subscribed to topic " + subs[i]);
   }
 
 }
@@ -214,85 +210,89 @@ function receiveUpstream(topic, _message) {
 function forwardMessage(_mqtt, topic, _message) {
     console.log("received on " + topic);
   try {
-    var message = JSON.parse(_message.toString())
+    var message = JSON.parse(_message.toString());
 
     //get the associated channel from the first character
-    var ch = topic[0]
-    var channel = getChannel(ch)
+    var ch = topic[0];
+    var channel = getChannel(ch);
     // make sure we get a valid channel, just in case
     if (channel) {
       //forward on the response
-      var out = getOutPath(topic)
+      var out = getOutPath(topic);
       if (out) {
-        _mqtt.publish(ch + "/" + out.path, _message.toString())
+        _mqtt.publish(ch + "/" + out.path, _message.toString());
 
       }
       //drop the first character and slash from the topic to match requests and responses
-      var _topic = topic.toString().slice(2)
+      var _topic = topic.toString().slice(2);
       // is this a response to a previous message
 
       if (timers[ch]) {
         if (timers[ch][_topic]) {
           //clear the entry from the list of timers
-          clearInterval(timers[ch][_topic]._setInterval)
-          delete timers[ch][_topic]
+          clearInterval(timers[ch][_topic]._setInterval);
+          delete timers[ch][_topic];
         }
       }
 
       //does this channel require a response  
-      console.log(channel)
+      console.log(channel);
       if (channel.respCh) {
         //set up a timer for this response, issue a warning back to the platform if not received in time
         if (!timers[channel.respCh]) {
-          timers[channel.respCh] = []
+          timers[channel.respCh] = [];
         }
         var interval = 3000 //timeout after 3 seconds by default
         var retries = 4 // 4 attempts by default
         if (channel.interval) {
-          interval = channel.interval
+          interval = channel.interval;
         }
         if (channel.retries) {
-          retries = channel.retries
+          retries = channel.retries;
         }
         var si = setInterval(
           function (topic, channel, retries) {
-            var _this = this
+            var _this = this;
             var retry = 0;
             return function () {
-              //TODO: see if we've gotten a response yet
+              //TODO: see if we"ve gotten a response yet
               retry++
               if (retry > retries) {
                 //remove the timer
                 _mqtt.publish("e/" + topic, JSON.stringify({
                   err: "Timeout",
                   errorMsg: "no response received"
-                }))
-                clearInterval(si)
-                return
+                }));
+                clearInterval(si);
+                return;
               }
-              console.log("Topic " + topic + ": wait " + retry + " of " + retries)
+              console.log("Topic " + topic + ": wait " + retry + " of " + retries);
               // this is where the updates
             }
           }(topic, channel, retries),
 
-          interval)
+          interval);
         timers[channel.respCh][_topic] = {
           _setInterval: si
-        }
+        };
       }
     }
   } catch (err) {
     upServer.publish("e/" + topic, JSON.stringify({
       err: err
-    }))
+    }));
   }
 }
 
 function receiveDownstream(topic, _message) {
 
 
-  var out = getOutPath(topic)
+  var out = getOutPath(topic);
   if (out) {
     forwardMessage(out.server, topic, _message);
   }
 }
+module.exports = {
+  init,
+  reset
+};
