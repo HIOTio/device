@@ -1,5 +1,5 @@
-var os = require('os')
-var disk = require('fd-diskspace')
+var os = require("os")
+var disk = require("fd-diskspace")
 
 var myIP = function () {
   var interfaces = os.networkInterfaces()

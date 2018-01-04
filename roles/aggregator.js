@@ -15,7 +15,7 @@
         "poll": 5000
     }
 */
-var mqtt= require('mqtt')
+var mqtt= require("mqtt")
 var mqttClient={}
 var aggHandlers=[]
 var aggSubs=[]
@@ -72,7 +72,7 @@ var timers = [];
 
 
     //handle incoming messages
-    mqttClient.on('message', function (topic, _message) {
+    mqttClient.on("message", function (topic, _message) {
         try {
           var message = JSON.parse(_message.toString())
           var commands=null

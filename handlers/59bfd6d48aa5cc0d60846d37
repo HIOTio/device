@@ -42,8 +42,8 @@ module.exports = {
   message: function (args) {
  //   console.log(args.channel)
     return JSON.stringify({
-      'aggregates': getAggregate(args),
-      'readings': getReadings(args)
+      "aggregates": getAggregate(args),
+      "readings": getReadings(args)
     })
   },
   parse: function (message, sensor) {

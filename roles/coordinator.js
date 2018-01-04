@@ -15,7 +15,7 @@
 -- -- -- move roles when device is unavailable
 -- -- -- move roles when device is short on resources
 */
-var mqtt= require('mqtt')
+var mqtt= require("mqtt")
 var mqttClient={}
 var aggHandlers=[]
 var aggSubs=[]
@@ -153,7 +153,7 @@ function init(coord,mqttServer,coord){
 
 
     //handle incoming messages
-    deploymentMqttClient.on('message', function (topic, _message) {
+    deploymentMqttClient.on("message", function (topic, _message) {
         try {
           var message = JSON.parse(_message.toString())
           var commands=null
@@ -176,7 +176,7 @@ function init(coord,mqttServer,coord){
         }
       })
 
-m2mMqttClient.on('message', function (topic, _message) {
+m2mMqttClient.on("message", function (topic, _message) {
     try {
       var message = JSON.parse(_message.toString())
       var commands=null

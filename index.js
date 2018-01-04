@@ -1,14 +1,14 @@
-var mqtt = require('mqtt');
-var config=require('./config');
-var aggregator = require('./roles/aggregator');
-var broker = require('./roles/broker');
-var sensor = require('./roles/sensor');
-var controller = require('./roles/controller');
-var coordinator = require('./roles/coordinator');
-var e = require('events');
+var mqtt = require("mqtt");
+var config=require("./config");
+var aggregator = require("./roles/aggregator");
+var broker = require("./roles/broker");
+var sensor = require("./roles/sensor");
+var controller = require("./roles/controller");
+var coordinator = require("./roles/coordinator");
+var e = require("events");
 var em = new e.EventEmitter();
-var device = require('./device');
-em.on('confUpdated',function(){
+var device = require("./device");
+em.on("confUpdated",function(){
     reset();
 })
 
@@ -18,7 +18,7 @@ function reload(){
 var _config=config.getConfig();
 // configure mosca, if enabled
 if(_config.moscaEnabled){
-    var mosca  =require('mosca');
+    var mosca  =require("mosca");
     localMqttServer= new mosca.Server({port:_config.moscaPort});
     //FUTURE: monitor status connections and traffic for local MQTT server
 }

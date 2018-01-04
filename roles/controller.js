@@ -33,7 +33,7 @@
             }]
         }
 */
-var mqtt= require('mqtt')
+var mqtt= require("mqtt")
 var mqttClient={}
 var ctrlHandlers=[]
 var ctrlSubs=[]
@@ -59,7 +59,7 @@ function init(ctrlList,mqttServer){
     // Subscribe to each topic
     addSubscriptions(ctrlSubs)
     //handle incoming messages
-    mqttClient.on('message', function (topic, _message) {
+    mqttClient.on("message", function (topic, _message) {
         try {
           var message = JSON.parse(_message.toString())
           var commands=null

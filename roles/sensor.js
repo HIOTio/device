@@ -16,7 +16,7 @@
             }
         }
 */
-var mqtt = require('mqtt')
+var mqtt = require("mqtt")
 var mqttClient = {}
 var senHandlers = []
 var timers = [] // need this to track the polling and remove them 
@@ -26,7 +26,7 @@ module.exports = {
 }
 
 function init(sensorList, mqttServer) {
-  // kill any existing timers - if we're reloading the config
+  // kill any existing timers - if we"re reloading the config
   console.log(sensorList);
   for (var key in timers) {
     clearInterval(timers[key]);

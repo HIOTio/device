@@ -1,14 +1,14 @@
-var handler = require('./handler');
-var fs = require('fs');
+var handler = require("./handler");
+var fs = require("fs");
 //NOTE: need this up here to set some config details (e.g. device id and mqtt address)
 
 /*
 Start-up:
  1 - read config file
  2 - set device ID
- 3 - check if I'm a broker
+ 3 - check if I"m a broker
  4.a - if I am, create a list of brokers with just localhost in it
- 4.b - if I'm not, create list of MQTT brokers
+ 4.b - if I"m not, create list of MQTT brokers
  5 - create list of subscriptions and handlers (need to tidy up current stuff)
  6 - Do I have sensors?
  7 - Do I have controllers?
@@ -60,11 +60,11 @@ var _config = {
   moscaEnabled:false,
   moscaPort:1884,
   mqttServers:[],
-  devicePath:'',
+  devicePath:"",
   device:{
-    hiotId:'',
-    name:'',
-    description:'',
+    hiotId:"",
+    name:"",
+    description:"",
   }
 };
 function getRoles(){
@@ -75,17 +75,27 @@ function getRoles(){
     sensor:false,
     controller:false,
   };
-  if(_config.roleChannels.aggregator) roles.aggregator=true;
-  if(_config.roleChannels.broker) roles.broker=true;
-  if(_config.roleChannels.coordinator) roles.coordinator=true;
-  if(_config.roleChannels.sensor) roles.sensor=true;
-  if(_config.roleChannels.controller) roles.controller=true;
-  return roles
+  if(_config.roleChannels.aggregator) {
+    roles.aggregator=true;
+  }
+  if(_config.roleChannels.broker) {
+    roles.broker=true;
+  }
+  if(_config.roleChannels.coordinator) {
+    roles.coordinator=true;
+  }
+  if(_config.roleChannels.sensor) {
+    roles.sensor=true;
+  }
+  if(_config.roleChannels.controller) {
+    roles.controller=true;
+  }
+  return roles;
 }
 module.exports={
   getConfig: function(){
     //reload the configuration from disk
-    var confTemp=JSON.parse(fs.readFileSync('./config.json', "utf8"));
+    var confTemp=JSON.parse(fs.readFileSync("./config.json", "utf8"));
     console.log(confTemp);
     _config.roleChannels=confTemp.roleChannels,
     _config.moscaEnabled=confTemp.moscaEnabled,
@@ -109,4 +119,4 @@ module.exports={
 
     //return new config (to be reapplied in index.js)
   }
-}
+};

@@ -5,10 +5,10 @@
     -- publish on e/deviceId = send error messages to platform
     -- publish on h/deviceId = send health Information
 */
-var mqtt = require('mqtt');
-var base64 = require('file-base64');
-var fs = require('fs');
-var mqttClient = {}
+var mqtt = require("mqtt");
+var base64 = require("file-base64");
+var fs = require("fs");
+var mqttClient = {};
 
 
 function init(mqttServer, device, em) {
@@ -20,7 +20,7 @@ function init(mqttServer, device, em) {
   });
   mqttClient.subscribe("C/" + device.devicePath);
   console.log("device subscribed to c/" + device.devicePath);
-  mqttClient.on('message', function (topic, _message) {
+  mqttClient.on("message", function (topic, _message) {
     try {
 
       var message = JSON.parse(_message.toString());
@@ -29,15 +29,15 @@ function init(mqttServer, device, em) {
         var conf = message.conf
         console.log("*************** Resetting device config **********************");
 
-        fs.writeFileSync('./config.json', JSON.stringify(conf));
-        em.emit('confUpdated');
+        fs.writeFileSync("./config.json", JSON.stringify(conf));
+        em.emit("confUpdated");
       }
 
     } catch (err) {
       console.log(err);
     }
-  })
+  });
 }
 module.exports = {
   init: init
-}
+};

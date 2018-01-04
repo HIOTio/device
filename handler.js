@@ -1,9 +1,9 @@
-var fs = require('fs')
-var mqtt = require('./MQTT')
+var fs = require("fs")
+var mqtt = require("./MQTT")
 var handlers = []
 var timers = []
 this.addHandler = function (index, file, poll, object) {
-  fs.stat(file + '.js', function (err, stat) {
+  fs.stat(file + ".js", function (err, stat) {
     if (err == null) {
       handlers[index] = require(file)
       if (poll) {
