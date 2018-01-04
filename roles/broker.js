@@ -90,7 +90,7 @@ var handlers = [];
 var mqttClient = {};
 var timers = []; // need this to track the polling and remove them 
 function init(brokers, mqttServer) {
-  console.log("setting up " + brokers.length + " broker(s)");
+ // console.log("setting up " + brokers.length + " broker(s)");
   myPaths = [];
   responsesNeeded = [];
   publications = [];
@@ -111,7 +111,7 @@ function init(brokers, mqttServer) {
   });
   //set up all channels for each ACTIVE broker
   for (var j = 0; j < brokers.length; j++) {
-    console.log("connecting to upstream server" + brokers[j].upMqttServers[0]);
+   // console.log("connecting to upstream server" + brokers[j].upMqttServers[0]);
     let upServer = mqtt.connect({
       server: brokers[j].upMqttServers[0].server,
       port: brokers[j].upMqttServers[0].port
@@ -124,8 +124,8 @@ function init(brokers, mqttServer) {
         for (var i = 0; i < channelsDown.length; i++) {
           subscriptions.push(channelsDown[i].ch + "/" + brokers[j].myPaths[k].in);
         }
-        var wildcard = 0
-        var _inTopic = brokers[j].myPaths[k].in
+        var wildcard = 0;
+        var _inTopic = brokers[j].myPaths[k].in;
         if (_inTopic.endsWith("#")) {
           wildcard = 2;
           _inTopic = _inTopic.slice(0, _inTopic.length - 2);
@@ -164,7 +164,7 @@ function getChannel(char) {
 }
 
 function getOutPath(topic) {
-  var _topic = topic.toString()
+  var _topic = topic.toString();
   _topic = topic.slice(2) //remove the channel and the first slash
   //need to iterate through the paths because the inbound topic could be any length due to wildcards
   for (path in myPaths) {

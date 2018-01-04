@@ -26,6 +26,7 @@ var sensors=[];
 var controllers=[];
 var brokers=[];
 var thing={};
+var deviceId={};
 
 function validateConfig(conf){
   //Validate the supplied config and return true if it"s OK
