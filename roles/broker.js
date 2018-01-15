@@ -61,7 +61,7 @@ var channelsUp = [{
 var channelsDown = [
     {
     ch: "x",
-    desc: "execution result (from controller",
+    desc: "execution result (from controller)",
     resp: false
   },
 
@@ -90,8 +90,8 @@ var subscriptionsUp=[];
 var handlers = [];
 var mqttClient = {};
 var timers = []; // need this to track the polling and remove them 
-function init(brokers, mqttServer) {
- // debug("setting up " + brokers.length + " broker(s)");
+function init(broker, mqttServer,moscaServer) {
+ // debug("setting up " + broker.length + " broker(s)");
   myPaths = [];
   responsesNeeded = [];
   publications = [];
@@ -105,28 +105,30 @@ function init(brokers, mqttServer) {
 }
   } 
   timers = [];
+  //run local mqtt for downstream connections
+  if(moscaServer){  
+    bMqttClient=mqtt.connect({server: broker.bMqttServer, port: broker.bMqttport});
+  }
   //connect to the mqtt broker
   mqttClient = mqtt.connect({
     server: mqttServer[0].server,
     port: mqttServer[0].port
   });
-  //set up all channels for each ACTIVE broker
-  for (var j = 0; j < brokers.length; j++) {
-   // debug("connecting to upstream server" + brokers[j].upMqttServers[0]);
+   debug("connecting to upstream server" + broker.upMqttServers[0]);
     let upServer = mqtt.connect({
-      server: brokers[j].upMqttServers[0].server,
-      port: brokers[j].upMqttServers[0].port
+      server: broker.upMqttServers[0].ip,
+      port: broker.upMqttServers[0].port
     });
     upServer.on("message", receiveUpstream);
     //and for each path in the broker, ignoring inactive ones
-    if (brokers[j].active) {
-      for (var k = 0; k < brokers[j].myPaths.length; k++) {
+    if (broker.active) {
+      for (var k = 0; k < broker.myPaths.length; k++) {
 
         for (var i = 0; i < channelsDown.length; i++) {
-          subscriptions.push(channelsDown[i].ch + "/" + brokers[j].myPaths[k].in);
+          subscriptions.push(channelsDown[i].ch + "/" + broker.myPaths[k].in);
         }
         var wildcard = 0;
-        var _inTopic = brokers[j].myPaths[k].in;
+        var _inTopic = broker.myPaths[k].in;
         if (_inTopic.endsWith("#")) {
           wildcard = 2;
           _inTopic = _inTopic.slice(0, _inTopic.length - 2);
@@ -134,17 +136,17 @@ function init(brokers, mqttServer) {
           wildcard = 1;
           _inTopic = _inTopic.slice(0, _inTopic.length - 2);
         } else {
-          _inTopic = _inTopic.slice(0, _inTopic.length - 1);
+          _inTopic = _inTopic.slice(0, _inTopic.length);
         }
         myPaths[_inTopic] = {
-          out: brokers[j].myPaths[k].out,
+          out: broker.myPaths[k].out,
           wildcard: wildcard,
           server: upServer
         };
 
       }
+      console.log(myPaths);
     }
-  }
   // Subscribe to each topic
   addSubscriptions(subscriptions);
   mqttClient.on("message", receiveDownstream);
@@ -169,6 +171,7 @@ function getOutPath(topic) {
   _topic = topic.slice(2) //remove the channel and the first slash
   //need to iterate through the paths because the inbound topic could be any length due to wildcards
   for (path in myPaths) {
+    
     if (_topic.startsWith(path)) {
       return {
         path: myPaths[path].out,
@@ -221,6 +224,7 @@ function forwardMessage(_mqtt, topic, _message) {
       //forward on the response
       var out = getOutPath(topic);
       if (out) {
+        console.log(out.path);
         _mqtt.publish(ch + "/" + out.path, _message.toString());
 
       }

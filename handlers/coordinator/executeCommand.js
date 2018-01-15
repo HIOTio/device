@@ -10,7 +10,7 @@ module.exports={
             }
         }else{
             return{
-                topic: message.path,
+                topic: "x/" + message.path,
                 message:{
                     channel: message.channel,
                     c: message.c,

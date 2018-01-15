@@ -137,18 +137,18 @@ function sendDown(topic,message){
 
 
 
-function init(coord,mqttServer){
+function init(coord,mqttServer,moscaServer){
+
     if(!coord){
         return;
     }
+    deploymentMqttClient=mqtt.connect({server: '127.0.0.1', port:moscaServer.port});
     //connect to the mqtt brokers
     platformMqttClient=mqtt.connect({
         server:coord.m2mMqttServer,
         port:coord.m2mMqttPort
     })
-    deploymentMqttClient= mqtt.connect ({
-        server:mqttServer[0].server, 
-        port:mqttServer[0].port})
+
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
     for(var i=0;i<Dchannels.length;i++){
         // Create a handler for this topic 
@@ -180,7 +180,7 @@ function init(coord,mqttServer){
                    if(resp){
                         if(resp.topic){
                           //send a message
-                          m2mMqttClient.publish(resp.topic,JSON.stringify(resp.message))
+                          platformMqttClient.publish(resp.topic,JSON.stringify(resp.message))
                         
                       }
                       }
