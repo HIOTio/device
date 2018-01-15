@@ -1,5 +1,6 @@
 var fs = require("fs")
 var mqtt = require("./MQTT")
+var debug=require("debug")("handler.js")
 var handlers = []
 var timers = []
 this.addHandler = function (index, file, poll, object) {
@@ -16,7 +17,7 @@ this.addHandler = function (index, file, poll, object) {
         
       }
     } else {
-     // console.log(err)
+     debug(err)
     }
   })
 }

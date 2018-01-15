@@ -1,6 +1,5 @@
 module.exports={
     handleMessage:function(topic,message){
-        console.log(message)
         if(!message.path){
             //no path provided => invalid message
             return {
@@ -11,7 +10,7 @@ module.exports={
             }
         }else{
             return{
-                topic: "X/" + message.path,
+                topic: message.path,
                 message:{
                     channel: message.channel,
                     c: message.c,

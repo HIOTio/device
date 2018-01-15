@@ -33,7 +33,9 @@
             }]
         }
 */
-var mqtt= require("mqtt")
+var mqtt= require("mqtt");
+
+var debug=require("debug")("coordinator.js");
 var mqttClient={}
 var ctrlHandlers=[]
 var ctrlSubs=[]
@@ -54,7 +56,7 @@ function init(ctrlList,mqttServer){
         ctrlSubs.push(ctrlList[i].channel)
         ctrlHandlers[ctrlList[i].channel] = require("../handlers/" + ctrlList[i].handler)
         ctrlCommands[ctrlList[i].channel]= ctrlList[i].commands
-        console.log("Added Handler " + ctrlList[i].handler + " for controller topic " + ctrlList[i].channel)
+        debug("Added Handler " + ctrlList[i].handler + " for controller topic " + ctrlList[i].channel)
     }
     // Subscribe to each topic
     addSubscriptions(ctrlSubs)
@@ -66,7 +68,7 @@ function init(ctrlList,mqttServer){
           if(ctrlSubs.indexOf(topic)>=0){
               //this is a valid message for this controller
               if(ctrlHandlers[topic]){
-                  console.log("got a controller message")
+                  debug("got a controller message")
                       // make sure the handler can handle an inbound message
                       if(ctrlHandlers[topic].handleMessage){
                         var resp = ctrlHandlers[topic].handleMessage(topic, message,ctrlCommands[topic])
@@ -83,7 +85,7 @@ function init(ctrlList,mqttServer){
 
           
         } catch (err) {
-         console.log(err)
+         debug(err)
         }
       })
 }

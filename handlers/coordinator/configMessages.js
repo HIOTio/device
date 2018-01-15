@@ -48,30 +48,17 @@ function saveConfig(conf){
   }
 }
 
-function loadConfig(){
-  //load the config from file and assign to config
-  var confTemp=fs.readFileSync("./config.json");
-  if(validateConfig(confTemp)){
-    setConfig(confTemp);
-  }
-}
-function setConfig(conf){
-  myConfig=conf;
-  updateConfig(conf);
-}
+
 
 function updateConfig(conf) {
- // console.log(myConfig);
 controllerCommands = [];
   //TODO: [x]need to include a mechanism to pass handler files to the device
   //TODO: [x]need to double-check the logic- _CFG_Set has to run twice before the deviceId will change
   if (conf) {
-  //  console.log("got new config")
     //TODO: sanity check the config before writing to disk
     //TODO: look at importin npm packages if needed, also look to remove unused packages 
     myConfig = conf;
   }
- // console.log(myConfig.deviceId)
   deviceId = myConfig.deviceId;
   sensors = null;
   if(myConfig.thing){  
@@ -112,7 +99,6 @@ controllerCommands = [];
     controllers = thing.controllers;
     roles.push("THING");
     for (var i = 0; i < thing.sensors.length; i++) {
-      console.log(sensors[i]);
       handler.addHandler(sensors[i].channel, "./handlers/" + sensors[i].handler, sensors[i].poll, sensors[i]);
      // moved this into the addHandler function to ensure it executes in sequence
       // setInterval(publish, sensors[i].poll, sensors[i]);
@@ -154,10 +140,8 @@ controllerCommands = [];
     var mosca  =require("mosca");
     mqttServer= new mosca.Server({port:myConfig.mqttServers[0].mqttPort});
     mqttServer.on("clientConnected", function(client) {
-      console.log("client connected", client.id);
   });
   mqttServer.on("published", function(packet, client) {
-    console.log("Published", packet.payload);
   });
     for (i = 0; i < brokers.length; i++) {
       handler.addHandler(brokers[i].channel, "./handlers/" + brokers[i].handler, null, null);
@@ -185,6 +169,17 @@ var empty = function () {
 
 }
 
+function setConfig(conf){
+  myConfig=conf;
+  updateConfig(conf);
+}
+function loadConfig(){
+  //load the config from file and assign to config
+  var confTemp=fs.readFileSync("./config.json");
+  if(validateConfig(confTemp)){
+    setConfig(confTemp);
+  }
+}
 
 
 /*

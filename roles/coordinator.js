@@ -15,10 +15,13 @@
 -- -- -- move roles when device is unavailable
 -- -- -- move roles when device is short on resources
 */
-var mqtt= require("mqtt")
-var mqttClient={}
-var aggHandlers=[]
-var aggSubs=[]
+var mqtt= require("mqtt");
+
+var debug=require("debug")("coordinator.js");
+var deploymentMqttClient={};
+var platformMqttClient={};
+var aggHandlers=[];
+var aggSubs=[];
 var timers = [] // need this to track the polling and remove them 
 module.exports={
     init:init,
@@ -50,15 +53,10 @@ function handleMessage(topic,message){
 */
 }
 var coordHandlers=[]
-var channels=[
+var Pchannels=[
     {
         ch:"E",
         desc:"Error message from the platform",
-        func:"ErrorMessages"
-    },
-    {
-        ch:"e",
-        desc:"Error message from the deployment",
         func:"ErrorMessages"
     },
     {
@@ -66,6 +64,36 @@ var channels=[
         desc:"response from the platform",
         func:"responseMessages"
     },
+    {
+        ch:"C",
+        desc:"config message from the platform",
+        func:"platformConfig"
+    },
+    {
+        ch:"Q",
+        desc:"query from the platform",
+        func:"queryMessages"
+    },
+    {
+        ch:"X",
+        desc:"execute command from the platform",
+        func:"executeCommand"
+    },
+    {
+        ch:"Z",
+        desc:"coordinator-coordinator comms",
+        func:"CoordinatorMessages"
+    }
+
+]
+var Dchannels=[
+
+    {
+        ch:"e",
+        desc:"Error message from the deployment",
+        func:"ErrorMessages"
+    },
+
     {
         ch:"r",
         desc:"response from the deployment",
@@ -76,44 +104,27 @@ var channels=[
         desc:"health message from the deployment",
         func:"healthMessages"
     },
-    {
-        ch:"C",
-        desc:"config message from the platform",
-        func:"platformConfig"
-    },
+
     {
         ch:"c",
         desc:"config message from the deployment",
         func:"configMessages"
     },
-    {
-        ch:"Q",
-        desc:"query from the platform",
-        func:"queryMessages"
-    },
+
     {
         ch:"q",
         desc:"query from the deployment",
         func:"queryMessages"
     },
-    {
-        ch:"X",
-        desc:"execute command from the platform",
-        func:"executeCommand"
-    },
+
     {
         ch:"a",
         desc:"aggregation data from the deployment",
         func:"aggregationMessages"
     },
-    {
-        ch:"Z",
-        desc:"coordinator-coordinator comms",
-        func:"CoordinatorMessages"
-    }
+
 
 ]
-
 
 function sendUp(topic, message){
     // send message to the platform
@@ -126,28 +137,34 @@ function sendDown(topic,message){
 
 
 
-function init(coord,mqttServer,coord){
+function init(coord,mqttServer){
     if(!coord){
         return;
     }
     //connect to the mqtt brokers
     platformMqttClient=mqtt.connect({
-        server:m2mMqttServer,
-        port:m2mMqttPort
+        server:coord.m2mMqttServer,
+        port:coord.m2mMqttPort
     })
     deploymentMqttClient= mqtt.connect ({
         server:mqttServer[0].server, 
         port:mqttServer[0].port})
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
-    for(var i=0;i<channels.length;i++){
+    for(var i=0;i<Dchannels.length;i++){
         // Create a handler for this topic 
-        coordHandlers[channels[i].ch] = require("../handlers/coordinator/" + channels[i].func)
-        console.log("Added Handler " + channels[i].func + " for coordinator topic " + channels[i].ch)
+        coordHandlers[Dchannels[i].ch] = require("../handlers/coordinator/" + Dchannels[i].func)
+        debug("Added Handler " + Dchannels[i].func + " for coordinator deployment topic " + Dchannels[i].ch)
 
-        console.log("Finished setting up coordinator")
+    }
+        for(var i=0;i<Pchannels.length;i++){
+        // Create a handler for this topic 
+        coordHandlers[Pchannels[i].ch] = require("../handlers/coordinator/" + Pchannels[i].func)
+        debug("Added Handler " + Pchannels[i].func + " for coordinator platform topic " + Pchannels[i].ch)
+
     }
     // Subscribe to each topic
-    addSubscriptions(channels)
+    addDeploymentSubscriptions(Dchannels);
+    addPlatformSubscriptions(Pchannels);
     
     // track missing/late client readings
 
@@ -158,7 +175,7 @@ function init(coord,mqttServer,coord){
           var message = JSON.parse(_message.toString())
           var commands=null
               if(coordHandlers[topic]){
-                  console.log("got a coordinator message")
+                  debug("got a coordinator message")
                   var resp = coordHandlers[topic].handleMessage(topic, message)
                    if(resp){
                         if(resp.topic){
@@ -172,20 +189,18 @@ function init(coord,mqttServer,coord){
             
           
         } catch (err) {
-         console.log(err)
+         debug(err)
         }
       })
 
-m2mMqttClient.on("message", function (topic, _message) {
+platformMqttClient.on("message", function (topic, _message) {
     try {
       var message = JSON.parse(_message.toString())
       var commands=null
-          if(coordHandlers[topic]){
-              console.log("got a coordinator message")
-              var resp = coordHandlers[topic].handleMessage(topic, message)
+          if(coordHandlers[topic.substring(0,1)]){
+              var resp = coordHandlers[topic.substring(0,1)].handleMessage(topic.substring(0,1), message)
                if(resp){
                     if(resp.topic){
-                      //send a message
                       deploymentMqttClient.publish(resp.topic,JSON.stringify(resp.message))
                     
                   }
@@ -195,7 +210,7 @@ m2mMqttClient.on("message", function (topic, _message) {
         
       
     } catch (err) {
-     console.log(err)
+     debug(err)
     }
   })
 }
@@ -210,9 +225,15 @@ function reset(aggList,mqttServer){
     init(aggList,mqttServer)
 }
 
-function addSubscriptions(subs){
+function addPlatformSubscriptions(subs){
     for(var i=0;i<subs.length;i++){
-        mqttClient.subscribe(subs[i].ch)
+        platformMqttClient.subscribe(subs[i].ch + "/#")
+    }
+   
+}
+function addDeploymentSubscriptions(subs){
+    for(var i=0;i<subs.length;i++){
+        deploymentMqttClient.subscribe(subs[i].ch + "/#")
     }
    
 }

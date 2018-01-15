@@ -2,11 +2,11 @@ const {exec} = require("child_process")
 //TODO: need to load this list dynamically and add some validation (number ad type of parameter)
 module.exports = {
   handleMessage: function (topic, message,commands) {
-    var command = message
+    var command = message;
+
     try {
     } catch (e) {
       // not valid command -> just ignore it for now
-  //    console.log(e)
     }
       /*
       
@@ -34,10 +34,10 @@ module.exports = {
           parameters += message.p[a].v + " "
       }
       exec ("" + commands[message.c].e + " " + parameters, function(err,stdout,stderr){
-        //TODO: need to return status (err or OK etc.)
-      //    console.log("Error" + err)
-       //   console.log("Std out" + stdout);
-        //  console.log("Std Err" + stderr)
+        if (err){
+          return false;
+        }
+          return true;
       })
   }
 }

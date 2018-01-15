@@ -37,7 +37,14 @@
         }],
         "coordinator": {
             "m2mMqttport": 1882,
-            "m2mMqttServer": "localhost"
+            "m2mMqttServer": "localhost",
+            "commanderPaths": [{
+                "commander": "commander1",
+                "paths": [
+                    "c/1/1/f1",
+                    "c/1/1/f2"
+                ]
+            }]
         },
         "controller": [{
             "_id": "59c393ee54674b1ce4982a69",
@@ -48,7 +55,39 @@
             "controllerId": "cont1203",
             "channel": "c/1/1/f1",
             "handler": "59bfda6ed7649a3070551ad9",
-            "added": null
+            "commands": [{
+                    "name": "porch light on/off",
+                    "e": "/home/pi/433Utils/RPi_utils/codesend 123456"
+                }, {
+                    "name": "garden light on/off",
+                    "e": "/home/pi/433Utils/RPi_utils/codesend 654321"
+                },
+                {
+                    "name": "kitchen lights on",
+                    "e": "/home/pi/433Utils/lightwave_rf/send R1S1D1 1 1"
+                }, {
+                    "name": "kitchen lights off",
+                    "e": "/home/pi/433Utils/lightwave_rf/send R1S1D1 1 0"
+                }, {
+                    "name": "sitting room spots on",
+                    "e": "/home/pi/433Utils/lightwave_rf/send R2S2D1 1 1"
+                },
+                {
+                    "name": "sitting room spots off",
+                    "e": "/home/pi/433Utils/lightwave_rf/send R2S2D1 1 0"
+                }, {
+                    "name": "sitting room centre on",
+                    "e": "/home/pi/433Utils/lightwave_rf/send R2S1D1 1 1"
+                },
+                {
+                    "name": "sitting room centre off",
+                    "e": "/home/pi/433Utils/lightwave_rf/send R2S1D1 1 0"
+                }, {
+                    "name": "send to console",
+                    "e": "dir"
+
+                }
+            ]
         }],
         "aggregator": [{
             "_id": "59db76cdccc548be30e5249f",

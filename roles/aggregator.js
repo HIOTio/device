@@ -15,14 +15,15 @@
         "poll": 5000
     }
 */
-var mqtt= require("mqtt")
-var mqttClient={}
-var aggHandlers=[]
-var aggSubs=[]
-var timers = [] // need this to track the polling and remove them 
+var mqtt= require("mqtt");
+var mqttClient={};
+var aggHandlers=[];
+var debug=require("debug")("aggregator.js");
+var aggSubs=[];
+var timers = []; // need this to track the polling and remove them 
 function addSubscriptions(subs){
     for(var i=0;i<subs.length;i++){
-        mqttClient.subscribe(subs[i])
+        mqttClient.subscribe(subs[i]);
     }
    
 }
@@ -34,26 +35,26 @@ var timers = [];
     //connect to the mqtt broker
     mqttClient= mqtt.connect ({
         server:mqttServer[0].server, 
-        port:mqttServer[0].port})
+        port:mqttServer[0].port});
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
     // need to have a many to many between topics and handlers
     for(var i=0;i<aggList.length;i++){
         // Create a handler for this topic 
         aggHandlers[aggList[i].channel] = require("../handlers/" + aggList[i].handler)
-        console.log("Added Handler " + aggList[i].handler + " for aggregator topic " + aggList[i].channel)
+        debug("Added Handler " + aggList[i].handler + " for aggregator topic " + aggList[i].channel)
         for(var j=0;j<aggList[i].topics.length;j++){
             //subscribe to the topic
             aggSubs.push(aggList[i].topics[j])
             //Check if there is an entry for this topic already, create one if not
             if(!aggHandlers[aggList[i].topics[j]]){
                 aggHandlers[aggList[i].topics[j]]=[]
-                console.log("Aggregator " + aggList[i].channel +": created new, empty handler array for " + aggList[i].topics[j])
+                debug("Aggregator " + aggList[i].channel +": created new, empty handler array for " + aggList[i].topics[j])
             }
             aggHandlers[aggList[i].topics[j]].push(require("../handlers/" + aggList[i].handler))
-            console.log("Aggregator " + aggList[i].channel +": added handler " + aggList[i].handler + " for " + aggList[i].topics[j])
+            debug("Aggregator " + aggList[i].channel +": added handler " + aggList[i].handler + " for " + aggList[i].topics[j])
         }
         // setInterval for the Poll function on each aggregator
-        console.log("Setting up publication for " + aggList[i].channel)
+        debug("Setting up publication for " + aggList[i].channel)
         timers.push(setInterval(
             function(agg,hand){
                 return function () {
@@ -63,7 +64,7 @@ var timers = [];
           }(aggList[i],aggHandlers),
       
            aggList[i].poll))
-        console.log("Finished setting up aggregator")
+        debug("Finished setting up aggregator")
     }
     // Subscribe to each topic
     addSubscriptions(aggSubs)
@@ -99,7 +100,7 @@ var timers = [];
 
           
         } catch (err) {
-         console.log(err)
+         debug(err)
         }
       })
 }

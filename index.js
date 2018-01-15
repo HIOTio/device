@@ -8,9 +8,7 @@ var coordinator = require("./roles/coordinator");
 var e = require("events");
 var em = new e.EventEmitter();
 var device = require("./device");
-em.on("confUpdated",function(){
-    reset();
-})
+
 
 //call this on startup and after config has changed
 function reload(){
@@ -35,7 +33,7 @@ sensor.init(_config.roleChannels.sensor,_config.mqttServers);
 // Role: Controller (controllerList, mqttServer)
 controller.init(_config.roleChannels.controller,_config.mqttServers);
 // Role: Coordinator (coordinatorConfig,mqttServer)
-coordinator.init(_config.roleChannels.coordinator,_config.mqttServers,_config.coordinator);
+coordinator.init(_config.roleChannels.coordinator,_config.mqttServers);
 
 }
 function reset(){
@@ -45,3 +43,6 @@ function reset(){
 
 }
 reload()
+em.on("confUpdated",function(){
+    reset();
+})

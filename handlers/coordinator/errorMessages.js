@@ -1,8 +1,9 @@
 module.exports={
-    handleMessage: function(topic,message){
-        resp={
+    handleMessage(topic,message){
+        let resp={
             topic:"111",
             message:"last one"
-        }
+        };
+        return resp;
     }
 }

@@ -96,7 +96,6 @@ module.exports={
   getConfig: function(){
     //reload the configuration from disk
     var confTemp=JSON.parse(fs.readFileSync("./config.json", "utf8"));
-    console.log(confTemp);
     _config.roleChannels=confTemp.roleChannels,
     _config.moscaEnabled=confTemp.moscaEnabled,
     _config.moscaPort=confTemp.moscaPort,

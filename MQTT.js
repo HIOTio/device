@@ -1,10 +1,10 @@
 var mqtt = require("mqtt");
 var config={};
+var debug=require("debug")("mqtt.js");
 var client = {};
 var handler = require("./handler");
 function initClient(server,_config){
   config.controllerCommands=_config;
-  console.log(_config);
   client= mqtt.connect ({server:server.server, port:server.port});
   
   client.on("message", function (topic, _message) {
@@ -16,10 +16,8 @@ function initClient(server,_config){
       if(config.controllerCommands[topic]){
           commands=config.controllerCommands[topic];
       }
-  //    console.log(handler.getHandler(topic))
       if(handler.getHandler(topic).handleMessage){
       var resp=handler.getHandler(topic).handleMessage(topic, message,commands);
-   //   console.log("inbound message on "+ topic)
       if(resp){
         if(resp.topic){
           //send a message
@@ -28,7 +26,7 @@ function initClient(server,_config){
       }
     }
     } catch (err) {
-     console.log(err);
+     debug(err);
     }
   });
   
@@ -46,10 +44,7 @@ module.exports = {
   },
   publish_poll: function (channel) {
     // TODO: need to figure out why this is firing twice for each sensor
- //   console.log(channel)
     var message = handler.getHandler(channel.channel).poll(channel);
-    
-  //  console.log(channel.channel)
     client.publish(channel.channel, message);
   },
     publish: function (channel,message) {

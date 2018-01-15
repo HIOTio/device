@@ -9,10 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "debug": "^3.1.0",
     "fd-diskspace": "^1.0.0",
     "file-base64": "^1.0.0",
-    "mqtt": "^2.12.0",
-    "mosca": "^2.5.2"
+    "mosca": "^2.5.2",
+    "mqtt": "^2.12.0"
   },
   "devDependencies": {
     "nodemon": "^1.12.1"

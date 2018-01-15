@@ -36,6 +36,7 @@
 
 var mqtt = require("mqtt");
 
+var debug=require("debug")("broker.js");
 var channelsUp = [{
     ch: "X",
     desc: "Execute Command on Device",
@@ -90,7 +91,7 @@ var handlers = [];
 var mqttClient = {};
 var timers = []; // need this to track the polling and remove them 
 function init(brokers, mqttServer) {
- // console.log("setting up " + brokers.length + " broker(s)");
+ // debug("setting up " + brokers.length + " broker(s)");
   myPaths = [];
   responsesNeeded = [];
   publications = [];
@@ -111,7 +112,7 @@ function init(brokers, mqttServer) {
   });
   //set up all channels for each ACTIVE broker
   for (var j = 0; j < brokers.length; j++) {
-   // console.log("connecting to upstream server" + brokers[j].upMqttServers[0]);
+   // debug("connecting to upstream server" + brokers[j].upMqttServers[0]);
     let upServer = mqtt.connect({
       server: brokers[j].upMqttServers[0].server,
       port: brokers[j].upMqttServers[0].port
@@ -192,7 +193,7 @@ function reset(aggList, mqttServer) {
 function addSubscriptions(subs) {
   for (var i = 0; i < subs.length; i++) {
     mqttClient.subscribe(subs[i]);
-    console.log("subscribed to topic " + subs[i]);
+    debug("subscribed to topic " + subs[i]);
   }
 
 }
@@ -208,7 +209,7 @@ function receiveUpstream(topic, _message) {
 }
 
 function forwardMessage(_mqtt, topic, _message) {
-    console.log("received on " + topic);
+    debug("received on " + topic);
   try {
     var message = JSON.parse(_message.toString());
 
@@ -236,7 +237,7 @@ function forwardMessage(_mqtt, topic, _message) {
       }
 
       //does this channel require a response  
-      console.log(channel);
+      debug(channel);
       if (channel.respCh) {
         //set up a timer for this response, issue a warning back to the platform if not received in time
         if (!timers[channel.respCh]) {
@@ -266,7 +267,7 @@ function forwardMessage(_mqtt, topic, _message) {
                 clearInterval(si);
                 return;
               }
-              console.log("Topic " + topic + ": wait " + retry + " of " + retries);
+              debug("Topic " + topic + ": wait " + retry + " of " + retries);
               // this is where the updates
             }
           }(topic, channel, retries),
