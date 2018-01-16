@@ -21,10 +21,7 @@ var debug=require("debug")("sensor.js");
 var mqttClient = {}
 var senHandlers = []
 var timers = [] // need this to track the polling and remove them 
-module.exports = {
-  init: init,
-  reset: reset
-}
+
 
 function init(sensorList, dMqttClient) {
   mqttClient=dMqttClient;
@@ -65,4 +62,8 @@ function reset(sensor, mqttServer) {
   //clear all timers
   //set up aggregators
   init(sensor, mqttServer)
+}
+module.exports = {
+  init,
+  reset
 }

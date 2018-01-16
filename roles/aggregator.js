@@ -24,7 +24,7 @@ var timers = []; // need this to track the polling and remove them
 function addSubscriptions(subs){
     for(var i=0;i<subs.length;i++){
         mqttClient.subscribe(subs[i]);
-        console.log("subscribed to " + subs[i])
+        debug("subscribed to " + subs[i]);
     }
    
 }
@@ -38,34 +38,34 @@ var timers = [];
     // need to have a many to many between topics and handlers
     for(var i=0;i<aggList.length;i++){
         // Create a handler for this topic 
-        aggHandlers[aggList[i].channel] = require("../handlers/" + aggList[i].handler)
-        debug("Added Handler " + aggList[i].handler + " for aggregator topic " + aggList[i].channel)
+        aggHandlers[aggList[i].channel] = require("../handlers/" + aggList[i].handler);
+        debug("Added Handler " + aggList[i].handler + " for aggregator topic " + aggList[i].channel);
         for(var j=0;j<aggList[i].topics.length;j++){
             //subscribe to the topic
-            aggSubs.push(aggList[i].topics[j])
+            aggSubs.push(aggList[i].topics[j]);
             //Check if there is an entry for this topic already, create one if not
             if(!aggHandlers[aggList[i].topics[j]]){
-                aggHandlers[aggList[i].topics[j]]=[]
-                debug("Aggregator " + aggList[i].channel +": created new, empty handler array for " + aggList[i].topics[j])
+                aggHandlers[aggList[i].topics[j]]=[];
+                debug("Aggregator " + aggList[i].channel +": created new, empty handler array for " + aggList[i].topics[j]);
             }
-            aggHandlers[aggList[i].topics[j]].push(require("../handlers/" + aggList[i].handler))
-            debug("Aggregator " + aggList[i].channel +": added handler " + aggList[i].handler + " for " + aggList[i].topics[j])
+            aggHandlers[aggList[i].topics[j]].push(require("../handlers/" + aggList[i].handler));
+            debug("Aggregator " + aggList[i].channel +": added handler " + aggList[i].handler + " for " + aggList[i].topics[j]);
         }
         // setInterval for the Poll function on each aggregator
         debug("Setting up publication for " + aggList[i].channel)
         timers.push(setInterval(
             function(agg,hand){
                 return function () {
-                    mqttClient.publish(agg.channel,hand[agg.channel].poll(agg))
+                    mqttServer.publish(agg.channel,hand[agg.channel].poll(agg));
                 }
             
           }(aggList[i],aggHandlers),
       
            aggList[i].poll))
-        debug("Finished setting up aggregator")
+        debug("Finished setting up aggregator");
     }
     // Subscribe to each topic
-    addSubscriptions(aggSubs)
+    addSubscriptions(aggSubs);
     
     // track missing/late client readings
 
@@ -73,8 +73,8 @@ var timers = [];
     //handle incoming messages
     mqttClient.on("message", function (topic, _message) {
         try {
-          var message = JSON.parse(_message.toString())
-          var commands=null
+          var message = JSON.parse(_message.toString());
+          var commands=null;
           if(aggSubs.indexOf(topic)>=0){
               //this is a valid message for this aggregator
               if(aggHandlers[topic]){
@@ -82,11 +82,11 @@ var timers = [];
                   for (var i=0; i<aggHandlers[topic].length;i++){
                       // make sure the handler can handle an inbound message
                       if(aggHandlers[topic][i].handleMessage){
-                        var resp = aggHandlers[topic][i].handleMessage(topic, message,commands)
+                        var resp = aggHandlers[topic][i].handleMessage(topic, message,commands);
                       if(resp){
                         if(resp.topic){
                           //send a message
-                          mqttClient.publish(resp.topic,JSON.stringify(resp.message))
+                          mqttServer.publish(resp.topic,JSON.stringify(resp.message));
                         }
                       }
                       }
@@ -97,7 +97,7 @@ var timers = [];
 
           
         } catch (err) {
-         debug(err)
+         debug(err);
         }
       })
 }
@@ -109,11 +109,11 @@ function reset(aggList,mqttServer){
     //clear all timers
 
     //set up aggregators
-    init(aggList,mqttServer)
+    init(aggList,mqttServer);
 }
 
 
 module.exports={
     init:init,
     reset: reset
-}
+};

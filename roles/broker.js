@@ -106,10 +106,7 @@ function init(broker, dMqttClient,moscaServer) {
   } 
   timers = [];
   //run local mqtt for downstream connections
-  if(moscaServer){  
-    bMqttClient=mqtt.connect({server: broker.bMqttServer, port: broker.bMqttport});
-  }
-  
+
    debug("connecting to upstream server" + broker.upMqttServers[0]);
     let upServer = mqtt.connect({
       server: broker.upMqttServers[0].ip,
@@ -136,7 +133,7 @@ function init(broker, dMqttClient,moscaServer) {
         }
         myPaths[_inTopic] = {
           out: broker.myPaths[k].out,
-          wildcard: wildcard,
+          wildcard,
           server: upServer
         };
       }
@@ -162,7 +159,7 @@ function getChannel(char) {
 
 function getOutPath(topic) {
   var _topic = topic.toString();
-  _topic = topic.slice(2) //remove the channel and the first slash
+  _topic = topic.slice(2); //remove the channel and the first slash
   //need to iterate through the paths because the inbound topic could be any length due to wildcards
   for (var path in myPaths) {
     if (_topic.startsWith(path)) {

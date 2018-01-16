@@ -46,7 +46,7 @@ module.exports={
 }
 function init(ctrlList,dMqttClient){
     //connect to the mqtt broker
-    mqttClient= dMqttClient
+    mqttClient= dMqttClient;
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
     // need to have a many to many between topics and handlers
     for(var i=0;i<ctrlList.length;i++){

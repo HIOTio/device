@@ -1,4 +1,5 @@
 var mqtt = require("mqtt");
+var debug = require("debug")("index.js");
 var config=require("./config");
 var aggregator = require("./roles/aggregator");
 var broker = require("./roles/broker");
@@ -9,7 +10,7 @@ var localMqttServer={};
 var e = require("events");
 var em = new e.EventEmitter();
 var device = require("./device");
-
+var mqttClient={};
 
 function reload(){
     var _config=config.getConfig();
@@ -24,16 +25,16 @@ function reload(){
     });
 
     mqttClient.on("connect", function(){
-        console.log("conected to upstream MQTT Server");
-    device.init(mqttClient,_config.device,em);
-    aggregator.init(_config.roleChannels.aggregator,mqttClient,localMqttServer);
-    broker.init(_config.roleChannels.broker,mqttClient, localMqttServer);
-    sensor.init(_config.roleChannels.sensor,mqttClient);
-    controller.init(_config.roleChannels.controller,mqttClient);
-    coordinator.init(_config.roleChannels.coordinator,mqttClient, localMqttServer);
-})
+        debug("conected to upstream MQTT Server");
+        device.init(mqttClient,_config.device,em);
+        aggregator.init(_config.roleChannels.aggregator,mqttClient,localMqttServer);
+        broker.init(_config.roleChannels.broker,mqttClient, localMqttServer);
+        sensor.init(_config.roleChannels.sensor,mqttClient);
+        controller.init(_config.roleChannels.controller,mqttClient);
+        coordinator.init(_config.roleChannels.coordinator,mqttClient, localMqttServer);
+    })
 
-    }
+}
 function reset(){
     localMqttServer.close(reload());
 

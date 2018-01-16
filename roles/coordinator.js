@@ -23,12 +23,19 @@ var platformMqttClient={};
 var aggHandlers=[];
 var aggSubs=[];
 var timers = [] // need this to track the polling and remove them 
-module.exports={
-    init:init,
-    reset: reset,
-    handleMessage: handleMessage
-}
 
+function addPlatformSubscriptions(subs){
+    for(var i=0;i<subs.length;i++){
+        platformMqttClient.subscribe(subs[i].ch + "/#")
+    }
+   
+}
+function addDeploymentSubscriptions(subs){
+    for(var i=0;i<subs.length;i++){
+        deploymentMqttClient.subscribe(subs[i].ch + "/#")
+    }
+   
+}
 function handleMessage(topic,message){
     // need to handle messages from the rest of the deployment, but also from the platform
     // lowercase topics are from te deployment devices
@@ -52,7 +59,7 @@ function handleMessage(topic,message){
     
 */
 }
-var coordHandlers=[]
+var coordHandlers=[];
 var Pchannels=[
     {
         ch:"E",
@@ -85,7 +92,7 @@ var Pchannels=[
         func:"CoordinatorMessages"
     }
 
-]
+];
 var Dchannels=[
 
     {
@@ -124,7 +131,7 @@ var Dchannels=[
     },
 
 
-]
+];
 
 function sendUp(topic, message){
     // send message to the platform
@@ -142,22 +149,23 @@ function init(coord,mqttClient,moscaServer){
     if(!coord){
         return;
     }
-    deploymentMqttClient=mqtt.connect({server: '127.0.0.1', port:moscaServer.port});
+    deploymentMqttClient=moscaServer;
     //connect to the mqtt brokers
     platformMqttClient=mqttClient;
     
 
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
-    for(var i=0;i<Dchannels.length;i++){
+    var i=0;
+    for( i=0;i<Dchannels.length;i++){
         // Create a handler for this topic 
-        coordHandlers[Dchannels[i].ch] = require("../handlers/coordinator/" + Dchannels[i].func)
-        debug("Added Handler " + Dchannels[i].func + " for coordinator deployment topic " + Dchannels[i].ch)
+        coordHandlers[Dchannels[i].ch] = require("../handlers/coordinator/" + Dchannels[i].func);
+        debug("Added Handler " + Dchannels[i].func + " for coordinator deployment topic " + Dchannels[i].ch);
 
     }
-        for(var i=0;i<Pchannels.length;i++){
+        for( i=0;i<Pchannels.length;i++){
         // Create a handler for this topic 
-        coordHandlers[Pchannels[i].ch] = require("../handlers/coordinator/" + Pchannels[i].func)
-        debug("Added Handler " + Pchannels[i].func + " for coordinator platform topic " + Pchannels[i].ch)
+        coordHandlers[Pchannels[i].ch] = require("../handlers/coordinator/" + Pchannels[i].func);
+        debug("Added Handler " + Pchannels[i].func + " for coordinator platform topic " + Pchannels[i].ch);
 
     }
     // Subscribe to each topic
@@ -170,15 +178,15 @@ function init(coord,mqttClient,moscaServer){
     //handle incoming messages
     deploymentMqttClient.on("message", function (topic, _message) {
         try {
-          var message = JSON.parse(_message.toString())
-          var commands=null
+          var message = JSON.parse(_message.toString());
+          var commands=null;
               if(coordHandlers[topic]){
-                  debug("got a coordinator message")
-                  var resp = coordHandlers[topic].handleMessage(topic, message)
+                  debug("got a coordinator message");
+                  var resp = coordHandlers[topic].handleMessage(topic, message);
                    if(resp){
                         if(resp.topic){
                           //send a message
-                          platformMqttClient.publish(resp.topic,JSON.stringify(resp.message))
+                          platformMqttClient.publish(resp.topic,JSON.stringify(resp.message));
                         
                       }
                       }
@@ -187,28 +195,25 @@ function init(coord,mqttClient,moscaServer){
             
           
         } catch (err) {
-         debug(err)
+         debug(err);
         }
-      })
+      });
 
 platformMqttClient.on("message", function (topic, _message) {
     try {
-      var message = JSON.parse(_message.toString())
-      var commands=null
+      var message = JSON.parse(_message.toString());
+      var commands=null;
           if(coordHandlers[topic.substring(0,1)]){
-              var resp = coordHandlers[topic.substring(0,1)].handleMessage(topic.substring(0,1), message)
+              var resp = coordHandlers[topic.substring(0,1)].handleMessage(topic.substring(0,1), message);
                if(resp){
                     if(resp.topic){
-                      deploymentMqttClient.publish(resp.topic,JSON.stringify(resp.message))
+                      deploymentMqttClient.publish(resp.topic,JSON.stringify(resp.message));
                     
                   }
                   }
-              }
-            
-        
-      
+              };      
     } catch (err) {
-     debug(err)
+     debug(err);
     }
   })
 }
@@ -220,18 +225,12 @@ function reset(aggList,mqttServer){
     //clear all timers
 
     //set up aggregators
-    init(aggList,mqttServer)
+    init(aggList,mqttServer);
 }
 
-function addPlatformSubscriptions(subs){
-    for(var i=0;i<subs.length;i++){
-        platformMqttClient.subscribe(subs[i].ch + "/#")
-    }
-   
-}
-function addDeploymentSubscriptions(subs){
-    for(var i=0;i<subs.length;i++){
-        deploymentMqttClient.subscribe(subs[i].ch + "/#")
-    }
-   
-}
+
+module.exports={
+    init,
+    reset,
+    handleMessage
+};
