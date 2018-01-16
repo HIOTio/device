@@ -202,7 +202,6 @@ function receiveUpstream(topic, _message) {
 }
 
 function forwardMessage(_mqtt, topic, _message) {
-    debug("received on " + topic);
   try {
     var message = JSON.parse(_message.toString());
 
