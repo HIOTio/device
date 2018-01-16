@@ -56,7 +56,7 @@ var timers = [];
         timers.push(setInterval(
             function(agg,hand){
                 return function () {
-                    mqttServer.publish(agg.channel,hand[agg.channel].poll(agg));
+                    mqttClient.publish(agg.channel,hand[agg.channel].poll(agg));
                 }
             
           }(aggList[i],aggHandlers),
@@ -86,7 +86,7 @@ var timers = [];
                       if(resp){
                         if(resp.topic){
                           //send a message
-                          mqttServer.publish(resp.topic,JSON.stringify(resp.message));
+                          mqttClient.publish(resp.topic,JSON.stringify(resp.message));
                         }
                       }
                       }
