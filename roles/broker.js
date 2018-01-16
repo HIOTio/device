@@ -145,7 +145,6 @@ function init(broker, mqttServer,moscaServer) {
         };
 
       }
-      console.log(myPaths);
     }
   // Subscribe to each topic
   addSubscriptions(subscriptions);

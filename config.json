@@ -51,7 +51,7 @@
             "m2mMqttport": 1882,
             "m2mMqttServer": "localhost",
             "commanderPaths": [{
-                "commander": "commander1",
+                "id": "commander1",
                 "paths": [
                     "c/1/1/f1",
                     "c/1/1/f2"
