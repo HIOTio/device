@@ -24,18 +24,16 @@ var timers = []; // need this to track the polling and remove them
 function addSubscriptions(subs){
     for(var i=0;i<subs.length;i++){
         mqttClient.subscribe(subs[i]);
+        console.log("subscribed to " + subs[i])
     }
    
 }
-function init(aggList,mqttServer){
+function init(aggList,dMqttClient,mqttServer){
+    mqttClient=dMqttClient;
 for (var key in timers){
     timers[key].delete;
 }
 var timers = [];
-    //connect to the mqtt broker
-    mqttClient= mqtt.connect ({
-        server:mqttServer[0].server, 
-        port:mqttServer[0].port});
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
     // need to have a many to many between topics and handlers
     for(var i=0;i<aggList.length;i++){
@@ -85,7 +83,6 @@ var timers = [];
                       // make sure the handler can handle an inbound message
                       if(aggHandlers[topic][i].handleMessage){
                         var resp = aggHandlers[topic][i].handleMessage(topic, message,commands)
-                        
                       if(resp){
                         if(resp.topic){
                           //send a message

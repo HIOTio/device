@@ -11,40 +11,45 @@ var em = new e.EventEmitter();
 var device = require("./device");
 
 
-//call this on startup and after config has changed
 function reload(){
-// Load config
-var _config=config.getConfig();
-// configure mosca, if enabled
-if(_config.moscaEnabled){
-    var mosca  =require("mosca");
-    localMqttServer= new mosca.Server({port:_config.moscaPort});
-    //FUTURE: monitor status connections and traffic for local MQTT server
-    
-}
-// set up device messaging - config etc
+    var _config=config.getConfig();
+    if(_config.moscaEnabled){
+        var mosca  =require("mosca");
+        localMqttServer= new mosca.Server({port:_config.moscaPort});
+        //FUTURE: monitor status connections and traffic for local MQTT server
+    }
+     mqttClient = mqtt.connect({
+        server: _config.mqttServers[0].server,
+        port: _config.mqttServers[0].port
+    });
 
-// Device: set up device config channels(mqttServer)
-device.init(_config.mqttServers,_config.device,em);
-// Role: Aggregator( aggList, mqttServer) - pass a list of mqttServers so that the aggregator can choose/swith
-aggregator.init(_config.roleChannels.aggregator,_config.mqttServers);
-// Role: Broker (brokerList, mqttServer)
-broker.init(_config.roleChannels.broker,_config.mqttServers, localMqttServer);
-// Role: Sensor (sensorList,mqttServer)
-sensor.init(_config.roleChannels.sensor,_config.mqttServers);
-// Role: Controller (controllerList, mqttServer)
-controller.init(_config.roleChannels.controller,_config.mqttServers);
-// Role: Coordinator (coordinatorConfig,mqttServer)
-coordinator.init(_config.roleChannels.coordinator,_config.mqttServers, localMqttServer);
+    mqttClient.on("connect", function(){
+        console.log("conected to upstream MQTT Server");
+    device.init(mqttClient,_config.device,em);
+    aggregator.init(_config.roleChannels.aggregator,mqttClient,localMqttServer);
+    broker.init(_config.roleChannels.broker,mqttClient, localMqttServer);
+    sensor.init(_config.roleChannels.sensor,mqttClient);
+    controller.init(_config.roleChannels.controller,mqttClient);
+    coordinator.init(_config.roleChannels.coordinator,mqttClient, localMqttServer);
+})
 
-}
+    }
 function reset(){
-    //stop mosca, if running
-    // need to update all the init functions to make sure subscriptions and timers are disabled
     localMqttServer.close(reload());
 
 }
-reload()
 em.on("confUpdated",function(){
     reset();
 })
+function getUpstreamMqtt(servers){
+    //TODO: update this to iterate through servers if server[0] is unavailable
+    if(!mqttClient.client){
+        mqttClient = mqtt.connect({
+        server: servers[0].server,
+        port: servers[0].port
+    });
+    }
+    return mqttClient;
+}
+
+reload();

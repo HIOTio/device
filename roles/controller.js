@@ -44,11 +44,9 @@ module.exports={
     init:init,
     reset: reset
 }
-function init(ctrlList,mqttServer){
+function init(ctrlList,dMqttClient){
     //connect to the mqtt broker
-    mqttClient= mqtt.connect ({
-        server:mqttServer[0].server, 
-        port:mqttServer[0].port})
+    mqttClient= dMqttClient
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
     // need to have a many to many between topics and handlers
     for(var i=0;i<ctrlList.length;i++){

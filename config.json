@@ -23,7 +23,7 @@
             "__v": 0,
             "myPaths": [{
                 "in": "1/2/3",
-                "out": "1/1/f1",
+                "out": "1/2/f1",
                 "_id": "59df282a3a092a2b805b656a"
             }, {
                 "in": "1/2/3/4/6/8/#",
@@ -38,7 +38,7 @@
                 "out": "1/5/f1",
                 "_id": "59df282a3a092a2b805b6568"
             }, {
-                "in": "1/95/f1",
+                "in": "1/2/f1",
                 "out": "1/4/f1",
                 "_id": "59df282a3a092a2b805b6568"
             }, {
@@ -112,6 +112,17 @@
             "active": true,
             "__v": 0,
             "topics": ["s/1/2/3/4/5/6/7/8/8/9/9/9/9", "s/4/5/22", "s/3/4/5"]
+        }, {
+            "_id": "59db76cdccc548be30e5249a",
+            "handler": "59bfdae2d7649a3070551adb",
+            "name": "Aggregator2",
+            "channel": "a/2",
+            "description": "some random aggregator",
+            "poll": 50000,
+            "deployment": "597f3056ef66be0648ef5bd3",
+            "active": true,
+            "__v": 0,
+            "topics": ["s/1/2/3/4/5/6/7/8/8/9/9/9/9", "s/4/5/22", "a/1/2/3/4/5"]
         }],
         "sensor": [{
             "_id": "59db98407e3a9fb060064ebf",
@@ -134,7 +145,7 @@
     "moscaPort": 1883,
     "mqttServers": [{
         "mqttServerIP": "127.0.0.1",
-        "mqttServerPort": "1833",
+        "mqttServerPort": "1883",
         "priority": 1,
         "_id": "59df294d3a092a2b805b6570"
     }, {

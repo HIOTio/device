@@ -26,20 +26,14 @@ module.exports = {
   reset: reset
 }
 
-function init(sensorList, mqttServer) {
+function init(sensorList, dMqttClient) {
+  mqttClient=dMqttClient;
   // kill any existing timers - if we"re reloading the config
   debug(sensorList);
   for (var key in timers) {
     clearInterval(timers[key]);
     timers[key].delete;
   }
-  //connect to the mqtt broker
-  mqttClient = mqtt.connect({
-    server: mqttServer[0].server,
-    port: mqttServer[0].port
-  })
-  // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
-  // need to have a many to many between topics and handlers
   for (var i = 0; i < sensorList.length; i++) {
 
     // Create a handler for this topic 

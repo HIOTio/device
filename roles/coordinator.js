@@ -137,17 +137,15 @@ function sendDown(topic,message){
 
 
 
-function init(coord,mqttServer,moscaServer){
+function init(coord,mqttClient,moscaServer){
 
     if(!coord){
         return;
     }
     deploymentMqttClient=mqtt.connect({server: '127.0.0.1', port:moscaServer.port});
     //connect to the mqtt brokers
-    platformMqttClient=mqtt.connect({
-        server:coord.m2mMqttServer,
-        port:coord.m2mMqttPort
-    })
+    platformMqttClient=mqttClient;
+    
 
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
     for(var i=0;i<Dchannels.length;i++){

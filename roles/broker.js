@@ -90,7 +90,8 @@ var subscriptionsUp=[];
 var handlers = [];
 var mqttClient = {};
 var timers = []; // need this to track the polling and remove them 
-function init(broker, mqttServer,moscaServer) {
+function init(broker, dMqttClient,moscaServer) {
+  mqttClient=dMqttClient;
  // debug("setting up " + broker.length + " broker(s)");
   myPaths = [];
   responsesNeeded = [];
@@ -98,7 +99,6 @@ function init(broker, mqttServer,moscaServer) {
   subscriptions = [];
   subscriptionsUp=[];
   handlers = [];
-  mqttClient = {};
   if(timers){
   for (var key in timers) {
     delete timers[key];
@@ -109,11 +109,7 @@ function init(broker, mqttServer,moscaServer) {
   if(moscaServer){  
     bMqttClient=mqtt.connect({server: broker.bMqttServer, port: broker.bMqttport});
   }
-  //connect to the mqtt broker
-  mqttClient = mqtt.connect({
-    server: mqttServer[0].server,
-    port: mqttServer[0].port
-  });
+  
    debug("connecting to upstream server" + broker.upMqttServers[0]);
     let upServer = mqtt.connect({
       server: broker.upMqttServers[0].ip,
@@ -143,7 +139,6 @@ function init(broker, mqttServer,moscaServer) {
           wildcard: wildcard,
           server: upServer
         };
-
       }
     }
   // Subscribe to each topic
@@ -169,16 +164,15 @@ function getOutPath(topic) {
   var _topic = topic.toString();
   _topic = topic.slice(2) //remove the channel and the first slash
   //need to iterate through the paths because the inbound topic could be any length due to wildcards
-  for (path in myPaths) {
-    
+  for (var path in myPaths) {
     if (_topic.startsWith(path)) {
       return {
         path: myPaths[path].out,
         server: myPaths[path].server
       };
     }
-    return null;
   }
+    return null;
 }
 
 function reset(aggList, mqttServer) {
@@ -223,7 +217,6 @@ function forwardMessage(_mqtt, topic, _message) {
       //forward on the response
       var out = getOutPath(topic);
       if (out) {
-        console.log(out.path);
         _mqtt.publish(ch + "/" + out.path, _message.toString());
 
       }
