@@ -67,39 +67,45 @@
             "controllerId": "cont1203",
             "channel": "x/1/1/f1",
             "handler": "59bfda6ed7649a3070551ad9",
-            "commands": [{
+            "commands": {
+                "1": {
                     "name": "porch light on/off",
                     "e": "/home/pi/433Utils/RPi_utils/codesend 123456"
-                }, {
+                },
+                "2": {
                     "name": "garden light on/off",
                     "e": "/home/pi/433Utils/RPi_utils/codesend 654321"
                 },
-                {
+                "3": {
                     "name": "kitchen lights on",
                     "e": "/home/pi/433Utils/lightwave_rf/send R1S1D1 1 1"
-                }, {
+                },
+                "4": {
                     "name": "kitchen lights off",
                     "e": "/home/pi/433Utils/lightwave_rf/send R1S1D1 1 0"
-                }, {
+                },
+                "5": {
                     "name": "sitting room spots on",
                     "e": "/home/pi/433Utils/lightwave_rf/send R2S2D1 1 1"
                 },
-                {
+                "6": {
                     "name": "sitting room spots off",
                     "e": "/home/pi/433Utils/lightwave_rf/send R2S2D1 1 0"
-                }, {
+                },
+                "7": {
                     "name": "sitting room centre on",
                     "e": "/home/pi/433Utils/lightwave_rf/send R2S1D1 1 1"
                 },
-                {
+                "8": {
                     "name": "sitting room centre off",
                     "e": "/home/pi/433Utils/lightwave_rf/send R2S1D1 1 0"
-                }, {
+                },
+                "9": {
                     "name": "send to console",
-                    "e": "dir"
+                    "e": "msg"
 
                 }
-            ]
+            }
         }],
         "aggregator": [{
             "_id": "59db76cdccc548be30e5249f",
@@ -131,7 +137,7 @@
             "channel": "s/1/2/3/4/5/6/7/8/8/9/9/9/9",
             "description": "some random sensor",
             "handler": "59db908c327a46cb841ac004",
-            "poll": 6000,
+            "poll": 60000,
             "config": {
                 "minValue": 1234,
                 "range": 100

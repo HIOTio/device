@@ -35,7 +35,7 @@
 */
 var mqtt= require("mqtt");
 
-var debug=require("debug")("coordinator.js");
+var debug=require("debug")("coorcontrollerdinator.js");
 var mqttClient={}
 var ctrlHandlers=[]
 var ctrlSubs=[]
