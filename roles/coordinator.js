@@ -26,13 +26,13 @@ var timers = [] // need this to track the polling and remove them
 
 function addPlatformSubscriptions(subs){
     for(var i=0;i<subs.length;i++){
-        platformMqttClient.subscribe(subs[i].ch + "/#")
+        platformMqttClient.subscribe(subs[i].ch);
     }
    
 }
 function addDeploymentSubscriptions(subs){
     for(var i=0;i<subs.length;i++){
-        deploymentMqttClient.subscribe(subs[i].ch + "/#")
+        deploymentMqttClient.subscribe(subs[i].ch);
     }
    
 }
@@ -96,36 +96,36 @@ var Pchannels=[
 var Dchannels=[
 
     {
-        ch:"e",
+        ch:"e/1",
         desc:"Error message from the deployment",
         func:"ErrorMessages"
     },
 
     {
-        ch:"r",
+        ch:"r/1",
         desc:"response from the deployment",
         func:"responseMessages"
     },
     {
-        ch:"h",
+        ch:"h/1",
         desc:"health message from the deployment",
         func:"healthMessages"
     },
 
     {
-        ch:"c",
+        ch:"c/1",
         desc:"config message from the deployment",
         func:"configMessages"
     },
 
     {
-        ch:"q",
+        ch:"q/1",
         desc:"query from the deployment",
         func:"queryMessages"
     },
 
     {
-        ch:"a",
+        ch:"a/1",
         desc:"aggregation data from the deployment",
         func:"aggregationMessages"
     },
@@ -152,7 +152,6 @@ function init(coord,mqttClient,moscaServer){
     deploymentMqttClient=moscaServer;
     //connect to the mqtt brokers
     platformMqttClient=mqttClient;
-    
 
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
     var i=0;
@@ -179,11 +178,13 @@ function init(coord,mqttClient,moscaServer){
     deploymentMqttClient.on("message", function (topic, _message) {
         try {
           var message = JSON.parse(_message.toString());
+          message.topic=topic;
           var commands=null;
               if(coordHandlers[topic]){
                   debug("got a coordinator message");
+                  
                   var resp = coordHandlers[topic].handleMessage(topic, message);
-                   if(resp){
+                   if(resp.send){
                         if(resp.topic){
                           //send a message
                           platformMqttClient.publish(resp.topic,JSON.stringify(resp.message));

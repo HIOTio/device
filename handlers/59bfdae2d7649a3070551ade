@@ -11,8 +11,6 @@ module.exports = {
     var count = 0
     var sensorReadings = []
     for (var i = 0; i < args.topics.length; i++) {
-      if (data[args.topics[i]]) {
-        sensorReadings = data[args.topics[i]]
         readings.push(sensorReadings)
         for (var j = 0; j < sensorReadings.length; j++) {
           if (count === 0) {
@@ -23,7 +21,7 @@ module.exports = {
           mean = ((count * mean) + sensorReadings[j].reading) / (count + 1)
           count++
         }
-      }
+  
     }
     var resp = JSON.stringify({
       date: Date.now(),
@@ -31,32 +29,22 @@ module.exports = {
       max: max,
       count: count,
       mean: mean,
-      readings: readings
+      aggId:args._id +'.js',
+      readings: data
     })
     // clear data for this aggregator
-    for (var i = 0; i < args.topics.length; i++) {
-      data[args.topics[i]] = []
-    }
+      data = []
     return resp
   },
-  message: function (args) {
-    return JSON.stringify({
-      "aggregates": getAggregate(args),
-      "readings": getReadings(args)
-    })
-  },
-  parse: function (message, sensor) {
-  },
+
   handleMessage: function (topic, message) {
-    if (!data[topic]) {
-      data[topic] = []
-    }
-    data[topic].push({
+    data.push({
       reading: message.reading,
       sensor_id: message.sensor_id,
       date: message.date
 
-    })
+    });
+  return false;
   }
 
 }
