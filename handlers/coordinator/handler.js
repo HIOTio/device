@@ -84,7 +84,7 @@ var channels=[
         func:"coordinatorChannel"
     }
 
-]
+];
 function init(config){
     //Run coordinator tasks on start
 
@@ -118,4 +118,4 @@ modules.exports={
     }
    
 
-}
+};

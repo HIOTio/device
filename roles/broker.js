@@ -87,6 +87,7 @@ var responsesNeeded = [];
 var publications = [];
 var subscriptions = [];
 var subscriptionsUp=[];
+var i,k=0;
 var handlers = [];
 var mqttClient = {};
 var timers = []; // need this to track the polling and remove them 
@@ -114,7 +115,7 @@ function init(broker, dMqttClient,moscaServer) {
     });
     upServer.on("message", receiveUpstream);
     //and for each path in the broker, ignoring inactive ones
-    var i,k=0;
+    
     if (broker.active) {
       for ( k = 0; k < broker.myPaths.length; k++) {
 
@@ -150,7 +151,7 @@ function getChannel(char) {
       return channelsDown[i];
     }
   }
-    for (var i = 0; i < channelsUp.length; i++) {
+    for ( i = 0; i < channelsUp.length; i++) {
     if (channelsUp[i].ch == char) {
       return channelsUp[i];
     }
@@ -185,7 +186,7 @@ function reset(aggList, mqttServer) {
 }
 
 function addSubscriptions(subs) {
-  for (var i = 0; i < subs.length; i++) {
+  for ( i = 0; i < subs.length; i++) {
     mqttClient.subscribe(subs[i]);
     debug("subscribed to topic " + subs[i]);
   }
@@ -245,7 +246,7 @@ function forwardMessage(_mqtt, topic, _message) {
           retries = channel.retries;
         }
         var si = setInterval(
-          function (topic, channel, retries) {
+          (function (topic, channel, retries) {
             var _this = this;
             var retry = 0;
             return function () {
@@ -265,7 +266,7 @@ function forwardMessage(_mqtt, topic, _message) {
             }
           }(topic, channel, retries),
 
-          interval);
+          interval));
         timers[channel.respCh][_topic] = {
           _setInterval: si
         };

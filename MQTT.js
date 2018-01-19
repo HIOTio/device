@@ -33,25 +33,25 @@ function initClient(server,_config){
   this.unsub = function (topic) {
     client.unsubscribe(topic, function () {
 
-    })
-  }
+    });
+  };
 }
 
 module.exports = {
-  subscribe: function (channel) {
+  subscribe (channel) {
     // TODO: make sure we"re connected
     client.subscribe(channel);
   },
-  publish_poll: function (channel) {
+  publishPoll(channel) {
     // TODO: need to figure out why this is firing twice for each sensor
     var message = handler.getHandler(channel.channel).poll(channel);
     client.publish(channel.channel, message);
   },
-    publish: function (channel,message) {
+    publish (channel,message) {
     client.publish(channel, message);
   },
   unsub: this.unsub,
-  init: function(server,config){
+  init(server,config){
     initClient(server);
   }
 

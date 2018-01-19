@@ -1,5 +1,5 @@
 module.exports={
-    handleMessage:function(topic,message){
+    handleMessage(topic,message){
         if(!message.path){
             //no path provided => invalid message
             return {
@@ -7,7 +7,7 @@ module.exports={
                 message:{
                     err:"no path provided"
                 }
-            }
+            };
         }else{
             return{
                 topic: "x/" + message.path,
@@ -16,7 +16,7 @@ module.exports={
                     c: message.c,
                     p: message.p
                 }
-            }
+            };
         
         }
     }

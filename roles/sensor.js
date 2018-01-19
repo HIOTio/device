@@ -16,11 +16,11 @@
             }
         }
 */
-var mqtt = require("mqtt")
+var mqtt = require("mqtt");
 var debug=require("debug")("sensor.js");
-var mqttClient = {}
-var senHandlers = []
-var timers = [] // need this to track the polling and remove them 
+var mqttClient = {};
+var senHandlers = [];
+var timers = []; // need this to track the polling and remove them 
 
 
 function init(sensorList, dMqttClient) {
@@ -34,12 +34,12 @@ function init(sensorList, dMqttClient) {
   for (var i = 0; i < sensorList.length; i++) {
 
     // Create a handler for this topic 
-    senHandlers[sensorList[i].channel] = require("../handlers/" + sensorList[i].handler)
+    senHandlers[sensorList[i].channel] = require("../handlers/" + sensorList[i].handler);
     debug("setting up sensor");
     debug(sensorList[i]);
-    debug("Added Handler " + sensorList[i].handler + " for sensor topic " + sensorList[i].channel)
+    debug("Added Handler " + sensorList[i].handler + " for sensor topic " + sensorList[i].channel);
     // setInterval for the Poll function on each aggregator
-    debug("Setting up publication for " + sensorList[i].channel)
+    debug("Setting up publication for " + sensorList[i].channel);
     timers.push(setInterval(
       function (sensor, handlers) {
         return function () {
@@ -49,8 +49,8 @@ function init(sensorList, dMqttClient) {
       }
       (sensorList[i], senHandlers),
 
-      sensorList[i].poll))
-    debug("Finished setting up sensor")
+      sensorList[i].poll));
+    debug("Finished setting up sensor");
   }
 
 }
@@ -62,8 +62,8 @@ function reset(sensor, mqttServer) {
   //clear all timers
   //set up aggregators
   init(sensor, mqttServer)
-}
+};
 module.exports = {
   init,
   reset
-}
+};

@@ -9,7 +9,7 @@ this.addHandler = function (index, file, poll, object) {
       handlers[index] = require(file);
       if (poll) {
         timers.push(setInterval(function () {
-          mqtt.publish_poll(object)
+          mqtt.publish_poll(object);
         }, object.poll));
       } else {
         // subscriptions will be handled by the mqtt.onMessage event.
@@ -25,7 +25,7 @@ this.addHandler = function (index, file, poll, object) {
 this.clearHandlers = function () {
   while (timers.length) {
     // TODO: need some error handling in here
-    clearInterval(timers.pop())
+    clearInterval(timers.pop());
   }
 };
 this.getHandler = function (handle) {
@@ -39,4 +39,4 @@ module.exports = {
   addHandler: this.addHandler,
   clearHandlers: this.clearHandlers,
   getHandler: this.getHandler
-}
+};

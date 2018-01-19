@@ -93,7 +93,7 @@ function getRoles(){
   return roles;
 }
 module.exports={
-  getConfig: function(){
+  getConfig(){
     //reload the configuration from disk
     var confTemp=JSON.parse(fs.readFileSync("./config.json", "utf8"));
     _config.roleChannels=confTemp.roleChannels,
@@ -111,7 +111,7 @@ module.exports={
     };
     
   },
-  setConfig: function(config){
+  setConfig(config){
     //need some validation in here
 
     //Write to config.json

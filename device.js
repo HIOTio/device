@@ -1,5 +1,5 @@
 var mqtt = require("mqtt");
-var debug=require("debug")("device.js")
+var debug=require("debug")("device.js");
 var base64 = require("file-base64");
 var fs = require("fs");
 var mqttClient = {};
@@ -13,7 +13,7 @@ function init(mqttClient, device, em) {
       var message = JSON.parse(_message.toString());
       if (message.set) {
         //have a new config
-        var conf = message.conf
+        var conf = message.conf;
         debug("*************** Resetting device config **********************");
 
         fs.writeFileSync("./config.json", JSON.stringify(conf));

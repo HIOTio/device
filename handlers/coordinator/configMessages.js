@@ -151,7 +151,7 @@ controllerCommands = [];
     }
   } else {
     isBroker = false;
-    mqttServer = mqtt.connect(config_json.mqttServer, {
+    mqttServer = mqtt.connect(configJson.mqttServer, {
       keepalive: 0,
       debug: false
     });

@@ -18,7 +18,7 @@ function reload(){
     if(_config.moscaEnabled){
         var mosca  =require("mosca");
         localMqttServer= new mosca.Server({port:_config.moscaPort});
-        localMqttClient=mqtt.connect({server: '127.0.0.1', port:localMqttServer.port});
+        localMqttClient=mqtt.connect({server: "127.0.0.1", port:localMqttServer.port});
         //FUTURE: monitor status connections and traffic for local MQTT server
     }
      mqttClient = mqtt.connect({
@@ -34,7 +34,7 @@ function reload(){
         sensor.init(_config.roleChannels.sensor,mqttClient);
         controller.init(_config.roleChannels.controller,mqttClient);
         coordinator.init(_config.roleChannels.coordinator,mqttClient, localMqttClient);
-    })
+    });
 
 }
 function reset(){
