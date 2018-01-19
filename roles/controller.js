@@ -36,14 +36,11 @@
 var mqtt= require("mqtt");
 
 var debug=require("debug")("coorcontrollerdinator.js");
-var mqttClient={}
-var ctrlHandlers=[]
-var ctrlSubs=[]
-var ctrlCommands=[]
-module.exports={
-    init:init,
-    reset: reset
-}
+var mqttClient={};
+var ctrlHandlers=[];
+var ctrlSubs=[];
+var ctrlCommands=[];
+
 function init(ctrlList,dMqttClient){
     //connect to the mqtt broker
     mqttClient= dMqttClient;
@@ -51,29 +48,29 @@ function init(ctrlList,dMqttClient){
     // need to have a many to many between topics and handlers
     for(var i=0;i<ctrlList.length;i++){
         // Create a handler for this topic 
-        ctrlSubs.push(ctrlList[i].channel)
-        ctrlHandlers[ctrlList[i].channel] = require("../handlers/" + ctrlList[i].handler)
-        ctrlCommands[ctrlList[i].channel]= ctrlList[i].commands
-        debug("Added Handler " + ctrlList[i].handler + " for controller topic " + ctrlList[i].channel)
+        ctrlSubs.push(ctrlList[i].channel);
+        ctrlHandlers[ctrlList[i].channel] = require("../handlers/" + ctrlList[i].handler);
+        ctrlCommands[ctrlList[i].channel]= ctrlList[i].commands;
+        debug("Added Handler " + ctrlList[i].handler + " for controller topic " + ctrlList[i].channel);
     }
     // Subscribe to each topic
-    addSubscriptions(ctrlSubs)
+    addSubscriptions(ctrlSubs);
     //handle incoming messages
     mqttClient.on("message", function (topic, _message) {
         try {
-          var message = JSON.parse(_message.toString())
-          var commands=null
+          var message = JSON.parse(_message.toString());
+          var commands=null;
           if(ctrlSubs.indexOf(topic)>=0){
               //this is a valid message for this controller
               if(ctrlHandlers[topic]){
-                  debug("got a controller message")
+                  debug("got a controller message");
                       // make sure the handler can handle an inbound message
                       if(ctrlHandlers[topic].handleMessage){
-                        var resp = ctrlHandlers[topic].handleMessage(topic, message,ctrlCommands[topic])
+                        var resp = ctrlHandlers[topic].handleMessage(topic, message,ctrlCommands[topic]);
                       if(resp){
                         if(resp.topic){
                           //send a message
-                          mqttClient.publish(resp.topic,JSON.stringify(resp.message))
+                          mqttClient.publish(resp.topic,JSON.stringify(resp.message));
                         }
                       }
                       }
@@ -83,7 +80,7 @@ function init(ctrlList,dMqttClient){
 
           
         } catch (err) {
-         debug(err)
+         debug(err);
         }
       })
 }
@@ -95,7 +92,7 @@ function reset(ctrlHandlers,mqttServer){
     //clear all timers
 
     //set up aggregators
-    init(ctrlHandlers,mqttServer)
+    init(ctrlHandlers,mqttServer);
 }
 
 function addSubscriptions(subs){
@@ -104,3 +101,7 @@ function addSubscriptions(subs){
     }
    
 }
+module.exports={
+    init,
+    reset
+};

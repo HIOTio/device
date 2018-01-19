@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "base-64": "^0.1.0",
     "debug": "^3.1.0",
     "fd-diskspace": "^1.0.0",
     "file-base64": "^1.0.0",

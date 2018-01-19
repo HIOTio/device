@@ -25,6 +25,7 @@ var aggregators=[];
 var sensors=[];
 var controllers=[];
 var brokers=[];
+var base64=require("base-64");
 var thing={};
 var deviceId={};
 
@@ -98,7 +99,8 @@ controllerCommands = [];
     sensors = thing.sensors;
     controllers = thing.controllers;
     roles.push("THING");
-    for (var i = 0; i < thing.sensors.length; i++) {
+    var i=0;
+    for ( i = 0; i < thing.sensors.length; i++) {
       handler.addHandler(sensors[i].channel, "./handlers/" + sensors[i].handler, sensors[i].poll, sensors[i]);
      // moved this into the addHandler function to ensure it executes in sequence
       // setInterval(publish, sensors[i].poll, sensors[i]);
@@ -164,10 +166,10 @@ controllerCommands = [];
 }
 getConfigJSON = function () {
   return JSON.stringify(myConfig);
-}
+};
 var empty = function () {
 
-}
+};
 
 function setConfig(conf){
   myConfig=conf;

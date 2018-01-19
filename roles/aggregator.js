@@ -33,7 +33,6 @@ function init(aggList,dMqttClient,mqttServer){
 for (var key in timers){
     timers[key].delete;
 }
-var timers = [];
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
     // need to have a many to many between topics and handlers
     for(var i=0;i<aggList.length;i++){
@@ -52,7 +51,7 @@ var timers = [];
             debug("Aggregator " + aggList[i].channel +": added handler " + aggList[i].handler + " for " + aggList[i].topics[j]);
         }
         // setInterval for the Poll function on each aggregator
-        debug("Setting up publication for " + aggList[i].channel)
+        debug("Setting up publication for " + aggList[i].channel);
         timers.push(setInterval(
             function(agg,hand){
                 return function () {
@@ -61,7 +60,7 @@ var timers = [];
             
           }(aggList[i],aggHandlers),
       
-           aggList[i].poll))
+           aggList[i].poll));
         debug("Finished setting up aggregator");
     }
     // Subscribe to each topic
@@ -99,7 +98,7 @@ var timers = [];
         } catch (err) {
          debug(err);
         }
-      })
+      });
 }
 function reset(aggList,mqttServer){
     //clear the mqtt subscriptions (if any)
@@ -114,6 +113,6 @@ function reset(aggList,mqttServer){
 
 
 module.exports={
-    init:init,
-    reset: reset
+    init,
+    reset
 };

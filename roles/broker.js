@@ -114,10 +114,11 @@ function init(broker, dMqttClient,moscaServer) {
     });
     upServer.on("message", receiveUpstream);
     //and for each path in the broker, ignoring inactive ones
+    var i,k=0;
     if (broker.active) {
-      for (var k = 0; k < broker.myPaths.length; k++) {
+      for ( k = 0; k < broker.myPaths.length; k++) {
 
-        for (var i = 0; i < channelsDown.length; i++) {
+        for ( i = 0; i < channelsDown.length; i++) {
           subscriptions.push(channelsDown[i].ch + "/" + broker.myPaths[k].in);
         }
         var wildcard = 0;
@@ -144,8 +145,8 @@ function init(broker, dMqttClient,moscaServer) {
 }
 
 function getChannel(char) {
-  for (var i = 0; i < channelsDown.length; i++) {
-    if (channelsDown[i].ch == char) {
+  for ( i = 0; i < channelsDown.length; i++) {
+    if (channelsDown[i].ch === char) {
       return channelsDown[i];
     }
   }
@@ -235,8 +236,8 @@ function forwardMessage(_mqtt, topic, _message) {
         if (!timers[channel.respCh]) {
           timers[channel.respCh] = [];
         }
-        var interval = 3000 //timeout after 3 seconds by default
-        var retries = 4 // 4 attempts by default
+        var interval = 3000; //timeout after 3 seconds by default
+        var retries = 4; // 4 attempts by default
         if (channel.interval) {
           interval = channel.interval;
         }
@@ -249,7 +250,7 @@ function forwardMessage(_mqtt, topic, _message) {
             var retry = 0;
             return function () {
               //TODO: see if we"ve gotten a response yet
-              retry++
+              retry++;
               if (retry > retries) {
                 //remove the timer
                 _mqtt.publish("e/" + topic, JSON.stringify({
@@ -272,7 +273,7 @@ function forwardMessage(_mqtt, topic, _message) {
     }
   } catch (err) {
     upServer.publish("e/" + topic, JSON.stringify({
-      err: err
+      err
     }));
   }
 }
