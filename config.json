@@ -70,11 +70,11 @@
             "commands": {
                 "1": {
                     "name": "porch light on/off",
-                    "e": "/home/pi/433Utils/RPi_utils/codesend 123456"
+                    "e": "/home/pi/433Utils/RPi_utils/codesend 15648532"
                 },
                 "2": {
                     "name": "garden light on/off",
-                    "e": "/home/pi/433Utils/RPi_utils/codesend 654321"
+                    "e": "/home/pi/433Utils/RPi_utils/codesend 15648536"
                 },
                 "3": {
                     "name": "kitchen lights on",
