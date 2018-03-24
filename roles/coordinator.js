@@ -64,7 +64,7 @@ var Pchannels=[
     {
         ch:"E",
         desc:"Error message from the platform",
-        func:"ErrorMessages"
+        func:"errorMessages"
     },
     {
         ch:"R",
@@ -89,7 +89,7 @@ var Pchannels=[
     {
         ch:"Z",
         desc:"coordinator-coordinator comms",
-        func:"CoordinatorMessages"
+        func:"coordinatorMessages"
     }
 
 ];
@@ -98,7 +98,7 @@ var Dchannels=[
     {
         ch:"e/1",
         desc:"Error message from the deployment",
-        func:"ErrorMessages"
+        func:"errorMessages"
     },
 
     {
@@ -155,7 +155,7 @@ function init(coord,mqttClient,moscaServer){
 
     // load the handers into an associative array with empty arrays for the elements (topic =>[handler])
     var i=0;
-    for( i=0;i<Dchannels.length;i++){
+    for( i;i<Dchannels.length;i++){
         // Create a handler for this topic 
         coordHandlers[Dchannels[i].ch] = require("../handlers/coordinator/" + Dchannels[i].func);
         debug("Added Handler " + Dchannels[i].func + " for coordinator deployment topic " + Dchannels[i].ch);
