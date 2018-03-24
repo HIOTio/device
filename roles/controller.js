@@ -67,6 +67,7 @@ function init(ctrlList,dMqttClient){
                       // make sure the handler can handle an inbound message
                       if(ctrlHandlers[topic].handleMessage){
                         var resp = ctrlHandlers[topic].handleMessage(topic, message,ctrlCommands[topic]);
+                        debug("found correct controller handler");
                       if(resp){
                         if(resp.topic){
                           //send a message
