@@ -78,27 +78,27 @@
                 },
                 "3": {
                     "name": "kitchen lights on",
-                    "e": "/home/pi/433Utils/lightwave_rf/send R1S1D1 1 1"
+                    "e": "/home/pi/433Utils/lightwaverf-pi/send R1S1D1 1 1"
                 },
                 "4": {
                     "name": "kitchen lights off",
-                    "e": "/home/pi/433Utils/lightwave_rf/send R1S1D1 1 0"
+                    "e": "/home/pi/433Utils/lightwaverf-pi/send R1S1D1 1 0"
                 },
                 "5": {
                     "name": "sitting room spots on",
-                    "e": "/home/pi/433Utils/lightwave_rf/send R2S2D1 1 1"
+                    "e": "/home/pi/433Utils/lightwaverf-pi/send R2S2D1 1 1"
                 },
                 "6": {
                     "name": "sitting room spots off",
-                    "e": "/home/pi/433Utils/lightwave_rf/send R2S2D1 1 0"
+                    "e": "/home/pi/433Utils/lightwaverf-pi/send R2S2D1 1 0"
                 },
                 "7": {
                     "name": "sitting room centre on",
-                    "e": "/home/pi/433Utils/lightwave_rf/send R2S1D1 1 1"
+                    "e": "/home/pi/433Utils/lightwaverf-pi/send R2S1D1 1 1"
                 },
                 "8": {
                     "name": "sitting room centre off",
-                    "e": "/home/pi/433Utils/lightwave_rf/send R2S1D1 1 0"
+                    "e": "/home/pi/433Utils/lightwaverf-pi/send R2S1D1 1 0"
                 },
                 "9": {
                     "name": "send to console",
