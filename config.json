@@ -176,7 +176,7 @@
 			"port": 3001,
 			"topics": [
 				{
-					"path": "1/1/f1",
+					"path": "x/1/1/f1",
 					"name": "Lighting",
 					"commands": [
 						{
