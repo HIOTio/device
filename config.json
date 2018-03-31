@@ -116,6 +116,14 @@
 					"9": {
 						"name": "send to console",
 						"e": "msg"
+					},
+					"10": {
+						"name":"Porch Light Off",
+						"e":"/home/pi/433Utils/RPi_utils/codesend 15648529"
+					},
+					"11":{
+						"name":"Garden Light Off",
+						"e":"/home/pi/433Utils/RPi_utils/codesend 15648530"
 					}
 				}
 			}
@@ -180,16 +188,24 @@
 					"name": "Lighting",
 					"commands": [
 						{
-							"desc": "porch light on/off",
+							"desc": "porch light on",
 							"id": "1"
 						},
+						{						
+							"desc": "porch light off",
+							"id": "10"
+						},
 						{
-							"desc": "garden light on/off",
+							"desc": "garden light on",
 							"id":"2"
+						},
+						{
+							"desc": "garden light off",
+							"id":"11"
 						},
 						{
 							"desc": "kitchen lights on",
-							"id":"2"
+							"id":"3"
 						},
 						{
 							"desc": "kitchen lights off",
