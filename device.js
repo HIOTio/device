@@ -1,8 +1,7 @@
-var mqtt = require("mqtt");
+
 var debug=require("debug")("device.js");
 var base64 = require("file-base64");
 var fs = require("fs");
-var mqttClient = {};
 function init(mqttClient, device, em) {
 
   mqttClient.subscribe("C/" + device.devicePath);

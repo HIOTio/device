@@ -15,7 +15,6 @@
         "poll": 5000
     }
 */
-var mqtt= require("mqtt");
 var mqttClient={};
 var aggHandlers=[];
 var debug=require("debug")("aggregator.js");

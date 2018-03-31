@@ -1,38 +1,4 @@
 
-/*
- accept an array of aggregator configurations and 
--- create an array of subscriptions (for each topic)
--- set up polling for the aggregator output
--- track missing or delayed messages from sensors
-
- sample controller config
- "controller":[{
-            "id": "controller1",
-            "controller_channel": "controller12345",
-            "description": "lighting controller, first floor",
-            "handler": "thing/controllers/demo_controller",
-            "broker": "demoBroker",
-            "commands": [{
-                    "c": 0,
-                    "e": "/home/pi/lightwaverf-pi/send",
-                    "p": [
-                        {
-                            "p": "p1",
-                            "r": true
-            },
-                        {
-                            "p": "p2",
-                            "r": true
-            },
-                        {
-                            "p": "p3",
-                            "r": true
-                    }
-                ]
-
-            }]
-        }
-*/
 var mqtt= require("mqtt");
 
 var debug=require("debug")("coorcontrollerdinator.js");
