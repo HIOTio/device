@@ -189,22 +189,27 @@
 					"commands": [
 						{
 							"desc": "porch light on",
+							"type": "toggle-light",
 							"id": "1"
 						},
 						{						
 							"desc": "porch light off",
+							"type": "toggle-light",
 							"id": "10"
 						},
 						{
 							"desc": "garden light on",
+							"type": "toggle-light",
 							"id":"2"
 						},
 						{
 							"desc": "garden light off",
+							"type": "toggle-light",
 							"id":"11"
 						},
 						{
 							"desc": "kitchen lights on",
+							"type": "toggle-light",
 							"id":"3"
 						},
 						{
@@ -213,18 +218,22 @@
 						},
 						{
 							"desc": "sitting room spots on",
+							"type": "toggle-light",
 							"id":"5"
 						},
 						{
 							"desc": "sitting room spots off",
+							"type": "toggle-light",
 							"id":"6"
 						},
 						{
 							"desc": "sitting room centre on",
+							"type": "toggle-light",
 							"id":"7"
 						},
 						{
 							"desc": "sitting room centre off",
+							"type": "toggle-light",
 							"id":"8"
 						}
 					]
