@@ -5,7 +5,7 @@ var fs = require("fs");
 function init(mqttClient, device, em) {
 
   mqttClient.subscribe("C/" + device.devicePath);
-  debug("device subscribed to c/" + device.devicePath);
+  debug("device subscribed to C/" + device.devicePath);
   mqttClient.on("message", function (topic, _message) {
     try {
 
