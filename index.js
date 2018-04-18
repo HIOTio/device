@@ -1,61 +1,109 @@
-const mqtt = require("mqtt");
+/********************************************************************************
+ * Copyright (c) 2017-2018 Mark Healy 
+ *
+ * This program and the accompanying materials are made available under the 
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 
+ *
+ ********************************************************************************/
+
+
 const debug = require("debug")("index.js");
-const config=require("./config");
-const aggregator = require("./roles/aggregator");
-const broker = require("./roles/broker");
-const sensor = require("./roles/sensor");
-const controller = require("./roles/controller");
-const coordinator = require("./roles/coordinator");
-const commander = require("./roles/commander");
+const messaging = require("./messaging");
+
 const e = require("events");
 const em = new e.EventEmitter();
-const device = require("./device");
-var mqttClient={};
-var localMqttServer={};
-function reload(){
-    var _config=config.getConfig();
-    var localMqttClient=[]; 
-    if(_config.moscaEnabled){
-        var mosca  =require("mosca");
-        localMqttServer= new mosca.Server({port:_config.moscaPort});
-        localMqttClient=mqtt.connect({server: "127.0.0.1", port:localMqttServer.port});
-        //FUTURE: monitor status connections and traffic for local MQTT server
-    }
-     mqttClient = mqtt.connect({
-        host: _config.mqttServers[0].mqttServerIP,
-        port: _config.mqttServers[0].mqttServerPort
-    });
+const config = require("./config")(em);
+var mqttClient = {};
+var localServer={};
+var subscriptions = [];
+var timers=[];
+function initialize() {
+	var _config = config.getConfig();
+	var localMqttClient = [];
+	// set up a local messaging server (MQTT broker) if configured
+	if (_config.moscaEnabled) {
+		console.log("local messaging server running");
+		localServer=messaging.server(_config);
+	}
+	// connect to the specified messaging server(s)
+	mqttClient = messaging.connect(_config);
+	//clear any existing subscriptions
+	subsClear();
 
-    mqttClient.on("connect", function(){
-    	
-        debug("conected to upstream MQTT Server");
-        device.init(mqttClient,_config.device,em);
-        aggregator.init(_config.roleChannels.aggregator,mqttClient,localMqttClient);
-        broker.init(_config.roleChannels.broker,mqttClient, localMqttClient);
-        sensor.init(_config.roleChannels.sensor,mqttClient);
-        controller.init(_config.roleChannels.controller,mqttClient);
-        coordinator.init(_config.roleChannels.coordinator,mqttClient, localMqttClient);
-        commander.init(_config.roleChannels.commander,mqttClient);
-        
-    });
+	const device = require("./device");
+	setup(device.init(_config.device,em));
+
+	if (_config.roleChannels.aggregator) {
+		const aggregator = require("./roles/aggregator");
+		setup(aggregator.init(_config.roleChannels.aggregator));
+	}
+
+	if(_config.roleChannels.delegator){
+		const delegator = require("./roles/delegator");
+	     setup(delegator.init(_config.roleChannels.delegator,mqttClient));
+	}
+	
+	if(_config.sensor){
+		const sensor = require("./roles/sensor");
+	     setup(sensor.init(_config.roleChannels.sensor,mqttClient));
+	}
+	if(_config.roleChannels.controller){
+		const controller = require("./roles/controller");
+	     setup(controller.init(_config.roleChannels.controller,mqttClient));
+	}
+	if(_config.coordinator){
+		const coordinator = require("./roles/coordinator");
+	     setup(coordinator.init(_config.roleChannels.coordinator,mqttClient));
+	}
+	if(_config.commander){
+		const commander = require("./roles/commander");
+	     setup(commander.init(_config.roleChannels.commandre,mqttClient));
+	}
+}
+// set up any required timers or subscriptions for each role
+function setup(settings){
+	if (settings.timers){
+		addTimers(settings.timers);
+	}
+	if(settings.topics){
+		subsAdd(settings.topics);
+	}
+		
+	
+}
+function addTimers(_timers){
+	_timers.forEach((timer)=> {
+		var timedEvent = setInterval(() =>{
+			timer.handler(messaging.send);
+		}, timer.poll);
+		timers.push(timedEvent);
+	});
+}
+function subsClear() {
+	// unsubscribe on all channels
+
+	//reset the subscriptions variable
+	subscriptions = [];
+}
+function subsAdd(topics) {
+	messaging.addSubscriptions(topics);
+
 
 }
-function reset(){
-    localMqttServer.close(reload());
+function timersClear(){
+	
+}
+function reset() {
+	subsClear();
+	timersClear();
+	messaging.close(initialize);
 
 }
-em.on("confUpdated",function(){
-    reset();
+em.on("confUpdated", function() {
+	reset();
 })
-function xxxxxxx_getUpstreamMqtt(servers){
-    //TODO: update this to iterate through servers if server[0] is unavailable
-    if(!mqttClient.client){
-        mqttClient = mqtt.connect({
-        server: servers[0].server,
-        port: servers[0].port
-    });
-    }
-    return mqttClient;
-}
 
-reload();
+initialize();

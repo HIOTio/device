@@ -65,6 +65,7 @@
 								"topic": "x/1/1/f1",
 								"body": {
 									"c": "1"
+									
 								}
 							},
 							{
@@ -90,75 +91,63 @@
 					]
 				}
 			]
-		},	
+		},
 		"controller": [
 			{
-				"id": "59c393ee54674b1ce4982a69",
+				"_id": "59c393ee54674b1ce4982a69",
 				"description": "Lighting controller - First Floor",
 				"name": "LWRF - F1",
-				"handler":"controller1",
+				"__v": 0,
 				"deployment": "597f3056ef66be0648ef5bd3",
 				"controllerId": "cont1203",
-				"topic": "X/1/1/f1",
-				"active":true,
-				"commands": [
-					 {
-						"id":"1",
+				"channel": "x/1/1/f1",
+				"handler": "59bfda6ed7649a3070551ad9",
+				"commands": {
+					"1": {
 						"name": "porch light on/off",
 						"e": "/home/pi/433Utils/RPi_utils/codesend 15648532"
 					},
-					 {
-					 "id":"2",
+					"2": {
 						"name": "garden light on/off",
 						"e": "/home/pi/433Utils/RPi_utils/codesend 15648536"
 					},
-					 {
-					 "id":"3",
+					"3": {
 						"name": "kitchen lights on",
 						"e": "/home/pi/lightwaverf-pi/send R1S1D1 1 1"
 					},
-					 {
-					 "id":"4",
+					"4": {
 						"name": "kitchen lights off",
 						"e": "/home/pi/lightwaverf-pi/send R1S1D1 1 0"
 					},
-					{
-					 "id":"5",
+					"5": {
 						"name": "sitting room spots on",
 						"e": "/home/pi/lightwaverf-pi/send R2S2D1 1 1"
 					},
-					 {
-					 "id":"6",
+					"6": {
 						"name": "sitting room spots off",
 						"e": "/home/pi/lightwaverf-pi/send R2S2D1 1 0"
 					},
-					 {
-					 "id":"7",
+					"7": {
 						"name": "sitting room centre on",
 						"e": "/home/pi/lightwaverf-pi/send R2S1D1 1 1"
 					},
-					 {
-					 "id":"8",
+					"8": {
 						"name": "sitting room centre off",
 						"e": "/home/pi/lightwaverf-pi/send R2S1D1 1 0"
 					},
-					 {
-					 "id":"9",
+					"9": {
 						"name": "send to console",
 						"e": "msg"
 					},
-					 {
-					 "id":"10",
+					"10": {
 						"name": "Porch Light Off",
 						"e": "/home/pi/433Utils/RPi_utils/codesend 15648529"
 					},
-					 {
-					 "id":"11",
+					"11": {
 						"name": "Garden Light Off",
 						"e": "/home/pi/433Utils/RPi_utils/codesend 15648530"
 					}
-				
-			]
+				}
 			}
 		],
 		"aggregator": [

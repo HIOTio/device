@@ -1,3 +1,5 @@
+Eclipse HIP&trade; Device
+
 A device is the underlying physical hardware which runs one or more of the HIOT roles (e.g. aggregator or coordinator).
 
 Regardless of the hardware and software comprising the device, there are a number of functions which need to be implemented.

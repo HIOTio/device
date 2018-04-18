@@ -1,5 +1,14 @@
+/********************************************************************************
+ * Copyright (c) 2017-2018 Mark Healy 1
+ *
+ * This program and the accompanying materials are made available under the 2
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0 3
+ *
+ ********************************************************************************/
 var fs = require("fs");
-var mqtt = require("./MQTT");
 var debug=require("debug")("handler.js");
 var handlers = [];
 var timers = [];
