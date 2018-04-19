@@ -1,16 +1,13 @@
 Eclipse HIP&trade; Device
 
-A device is the underlying physical hardware which runs one or more of the HIOT roles (e.g. aggregator or coordinator).
+This is a NodeJS implementation of the HIP device functionality.
+All roles have been enabled and configured by default and some tweaks to the config.json configuration file should be enough to connect the device to the [Platform](https://githun.com/HIOTio/platform) via the [Coordinator Link](https://github.com/HIOTio/coordinator_link)
 
-Regardless of the hardware and software comprising the device, there are a number of functions which need to be implemented.
+In order to run the device you need to have [NodeJS](https://nodejs.org) installed.
 
-The functionality is provided via nodejs as well as arduino sketches/libraries
+When you download or clone the repository, enter the folder and run the following commands:
 
-The following functionality is required for any device:
-- return the network configuration for HIOT interfaces (equivalent to "ip addr")
-- return details of the installed OS (if any) 
-- maintain a list of installed and active HIOT roles (thing-sensor, thing-controller, aggregator, broker)
-- report on the "health" of the device (duty cycle - percentage of time taken to execute HIOT functions, memory usage and storage usage)
+- "npm install" - to install dependencies
+- "node index.js" - to start the device
 
-For each of the installed roles (e.g. aggregator), one or more mqtt publications and/or subscriptions will be needed. In addition, various utility files will be used to provide the required functionality.
-
+If you have an MQTT client, like [MQTTFX](http://mqttfx.jensd.de/) you can subscribe to the local server (included in the default device config) and explore the sensor (telemetry) and aggregated data being published

@@ -9,27 +9,37 @@
  *
  ********************************************************************************/
 
-
-// store the parameters/characteristics for this controller
+const {exec} = require("child_process");
 var cont={}; 
 var commands=[];
 module.exports= function(controller){
-	console.log(controller);
 	cont=controller;
 	cont.commands.forEach((cmd)=>{
 		commands.push(cmd);
 		
 	});
 	return {
-		handleMessage,
+		handleMessage
 		
 	}
 }
-
 function handleMessage(command,topic,send){
+	console.log("got a message for controller1");
 	commands.forEach((cmd)=> {
 		if(cmd.id===command.c){
-			console.log(cmd);
+			var params='';
+			
+			if(Array.isArray(command.p)){
+				command.p.forEach((p)=>{
+					params=params.concat(' ');
+					params=params.concat(p.v);
+				});
+			}
+			exec("" + cmd.e + params,(err,stdout,stderr)=>{
+				if(err){
+					send("e/1/" + topic,JSON.stringify(err));
+				}
+			});
 		}
 	})
 }

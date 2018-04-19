@@ -12,6 +12,10 @@
 /*
  * 
  * Delegators:
+ * 
+ * 2 modes of operation:-
+ * 
+ * 1.
  * 	- chained together, e.g. if the coordinator receives an eXecute message on topic "X/1/2/3/4/A/5"
  * 	- message (include the execution topic as element "p") is sent on "B/1"
  *  - Delegator subscribed to "B/1" publishes unmodified version of the message to "B/1/2" 
@@ -19,13 +23,14 @@
  * .....
  *  - Delegator listening on "B/1/2/3/4/A", publishes the message on "X/1/2/3/4/A/5", the original execution topic
  *  
+ *  2.
  *  Delegator Groups
  *  These messages allow a number of commands to be grouped as one and published on multiple topics by the last delegator
  *  
  */
 
 
-var debug = require("debug")("delegator.js");
+var debug = require("debug")("/roles/delegator.js");
 var messageGroups=[];
 function init(delegators) {
 	var topics = [];
@@ -45,8 +50,10 @@ function init(delegators) {
 	};
 }
 function handleMessage(message, topic, messaging) {
+	console.log("got a delegator message");
 	if (!message.p) {
-		console.log("badly formed delegator message, " + message);
+		console.log("badly formed delegator message, ");
+		console.log(message);
 	} else {
 		if (topic.substring(1) === message.p.substring(1, message.p.length - 2)) {
 			if(!message.g){
@@ -65,7 +72,6 @@ function handleMessage(message, topic, messaging) {
 						});
 					}
 				});
-
 			}
 		} else {
 			// need to forward on to the next delegator

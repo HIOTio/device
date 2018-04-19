@@ -11,7 +11,7 @@
 
 
 const debug = require("debug")("index.js");
-const messaging = require("./messaging");
+var messaging = {};
 
 const e = require("events");
 const em = new e.EventEmitter();
@@ -23,13 +23,16 @@ var timers=[];
 function initialize() {
 	var _config = config.getConfig();
 	var localMqttClient = [];
+
+	// connect to the specified messaging server(s)
+	messaging = require("./messaging")(_config.mqttServers);
 	// set up a local messaging server (MQTT broker) if configured
 	if (_config.moscaEnabled) {
 		console.log("local messaging server running");
 		localServer=messaging.server(_config);
 	}
-	// connect to the specified messaging server(s)
-	mqttClient = messaging.connect(_config);
+	mqttClient=messaging.connection;
+	
 	//clear any existing subscriptions
 	subsClear();
 
@@ -46,7 +49,7 @@ function initialize() {
 	     setup(delegator.init(_config.roleChannels.delegator,mqttClient));
 	}
 	
-	if(_config.sensor){
+	if(_config.roleChannels.sensor){
 		const sensor = require("./roles/sensor");
 	     setup(sensor.init(_config.roleChannels.sensor,mqttClient));
 	}
@@ -54,13 +57,13 @@ function initialize() {
 		const controller = require("./roles/controller");
 	     setup(controller.init(_config.roleChannels.controller,mqttClient));
 	}
-	if(_config.coordinator){
+	if(_config.roleChannels.coordinator){
 		const coordinator = require("./roles/coordinator");
-	     setup(coordinator.init(_config.roleChannels.coordinator,mqttClient));
+	     setup(coordinator.init(_config.roleChannels.coordinator,mqttClient, _config.device.deployment));
 	}
-	if(_config.commander){
+	if(_config.roleChannels.commander){
 		const commander = require("./roles/commander");
-	     setup(commander.init(_config.roleChannels.commandre,mqttClient));
+	     setup(commander.init(_config.roleChannels.commander,mqttClient));
 	}
 }
 // set up any required timers or subscriptions for each role

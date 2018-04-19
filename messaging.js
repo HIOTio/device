@@ -14,18 +14,18 @@ var config={};
 var debug=require("debug")("messaging.js");
 var mqttClient = {};
 var localServer={};
+var connection={};
 var handlers=[];
 var connected =false;
-function connect(config){
-	devicePath=config.device.devicePath;
-	deviceId=config.device.id;
+function connect(mqttServers){
 	console.log("connecting to messaging server");
 	mqttClient= mqtt.connect({
-        host: config.mqttServers[0].mqttServerIP,
-        port: config.mqttServers[0].mqttServerPort
+        host: mqttServers[0].mqttServerIP,
+        port: mqttServers[0].mqttServerPort
     });
 	mqttClient.on("connect", ()=> {
-		console.log("connected");
+		console.log("connected to "+ mqttServers[0].mqttServerIP + 
+				" on port " + mqttServers[0].mqttServerPort);
 		connected=true;
 		subscribe();
 	});
@@ -88,13 +88,16 @@ function addSubscriptions(topics){
 	});
 }
 
-module.exports = {
-		connect,
+module.exports = function(config){
+	connection=connect(config);
+	return{
+		connection,
 		addSubscriptions,
 		subscribe,
 		close,
 		server,
 		send
+	}
 }
 
 
