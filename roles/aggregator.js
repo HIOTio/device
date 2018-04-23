@@ -9,36 +9,45 @@
  *
  ********************************************************************************/
 
-var debug=require("debug")("aggregator.js");
-function init(aggList){
-	var timers=[];
-	var topics=[];
-	aggList.forEach((aggregator)=> {
-		if(aggregator.active){
-			var agg=require("../handlers/" + aggregator.handler)(aggregator);
-		//setup timers
-		if(aggregator.poll){
-			timers.push({
-				poll: aggregator.poll,
-				handler: agg.poll
-				
+var debug = require("debug")("aggregator.js");
+function init(aggList) {
+	var timers = [];
+	var topics = [];
+	aggList.forEach((aggregator) => {
+		if (aggregator.active) {
+			var agg = require("../handlers/" + aggregator.handler)(aggregator);
+			//setup timers
+			if (aggregator.poll) {
+				timers.push({
+					poll : aggregator.poll,
+					handler : agg.poll
+				});
+			}
+			//need to handle event, response and query messages for each topic 
+			aggregator.topics.forEach((topic) => {
+				[ 'v', 'r', 'q' ].forEach((otherTopic) => {
+
+					topics.push({
+						topic : otherTopic + topic.substring(1),
+						handler : agg.handleOther
+					});
+				});
+				topics.push({
+					topic ,
+					handler : agg.handleMessage
+				})
 			});
-		}
-		aggregator.topics.forEach((topic)=>{
-			topics.push({
-				topic, topic,
-				handler: agg.handleMessage
-			})
-		});
+			
 		}
 	});
-	
+
 	return {
 		timers,
-		topics 
+		topics
 	}
 }
-
-module.exports={
-    init
+function forwarder() {
+}
+module.exports = {
+	init
 };

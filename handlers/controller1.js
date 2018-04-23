@@ -24,7 +24,7 @@ module.exports= function(controller){
 	}
 }
 function handleMessage(command,topic,send){
-	console.log("got a message for controller1");
+	debug("got a message for controller1");
 	commands.forEach((cmd)=> {
 		if(cmd.id===command.c){
 			var params='';

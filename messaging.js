@@ -18,13 +18,13 @@ var connection={};
 var handlers=[];
 var connected =false;
 function connect(mqttServers){
-	console.log("connecting to messaging server");
+	debug("connecting to messaging server");
 	mqttClient= mqtt.connect({
         host: mqttServers[0].mqttServerIP,
         port: mqttServers[0].mqttServerPort
     });
 	mqttClient.on("connect", ()=> {
-		console.log("connected to "+ mqttServers[0].mqttServerIP + 
+		debug("connected to "+ mqttServers[0].mqttServerIP + 
 				" on port " + mqttServers[0].mqttServerPort);
 		connected=true;
 		subscribe();
@@ -32,12 +32,11 @@ function connect(mqttServers){
 	
 	return mqttClient;
 }
-
 function subscribe(){
 	if(connected){
 		handlers.forEach((handler)=>{
 			mqttClient.subscribe(handler.topic);
-			console.log("subscribed to " + handler.topic)
+			debug("subscribed to " + handler.topic)
 		})
 
 		mqttClient.on("message", function(topic, _message) {
@@ -52,13 +51,13 @@ function subscribe(){
 	}else{
 		// need to wait until we're connected
 		// this is nasty....
-		console.log("waiting");
+		debug("waiting");
 		setTimeout(subscribe(topics,2000));
 	}
 }
 
 function send(topic, message, retryLevel){
-	
+
 	mqttClient.publish(topic,message);
 }
 function close(callback){
@@ -84,7 +83,7 @@ function server(config){
 function addSubscriptions(topics){
 	topics.forEach((topic) => {
 		handlers.push(topic);
-		console.log("creating subscription for topic " + topic.topic );
+		debug("creating subscription for topic " + topic.topic );
 	});
 }
 

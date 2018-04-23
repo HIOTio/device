@@ -33,7 +33,8 @@ module.exports = function(aggregator) {
 	agg = aggregator;
 	return {
 		poll ,
-		handleMessage ,
+		handleMessage,
+		handleOther
 	}
 }
 
@@ -91,4 +92,11 @@ function poll(messaging) {
 function handleMessage(dataIn, topic) {
 	dataIn.s = topic;
 	data.push(dataIn);
+}
+function handleOther(dataIn, topic,messaging) {
+	if (!Array.isArray(dataIn.t)){
+		dataIn.t=[];
+	}
+	dataIn.t.push(topic);
+	messaging(agg.channel, JSON.stringify(dataIn));
 }

@@ -38,3 +38,11 @@ function handleMessage(dataIn){
 	// push the data received into the data array
 	data.push(dataIn);
 }
+function handleOther(dataIn, topic,messaging) {
+	var outTopic= agg.channel;
+	messaging(outTopic, JSON.stringify(
+			{
+				"t":topic,
+				"m":dataIn
+			}));
+}

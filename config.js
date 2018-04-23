@@ -94,7 +94,7 @@ return {
 
 
 		} catch (err) {
-			console.log(err);
+			debug(err);
 		}
 	}
 };

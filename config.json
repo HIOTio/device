@@ -81,7 +81,7 @@
 		],
 		"coordinator": {
 			"platformPort": 1883,
-			"platformServer": "192.168.1.4"
+			"platformServer": "127.0.0.1"
 		},
 		"controller": [
 			{
@@ -184,7 +184,42 @@
 					"s/4/5/22",
 					"a/1/2/3/4/5"
 				]
-			}
+			},
+			{
+				"_id":"1222222",
+				"handler": "agg-forwarder",
+				"name":"Forwarder",
+				"channel":"a/3/f",
+				"poll":null,
+				"deployment": "597f3056ef66be0648ef5bd3",
+				"active": true,
+				"__v": 0,
+				"topics": [
+					"d/1/1/1/1/1/1/1/3/5/6",
+					"h/1/1/1/1/1/1/1/3/5/6",
+					"d/ABCDEF1234567890",
+					"o"
+				]
+			},
+			{
+				"_id":"098765544",
+				"handler": "agg-top",
+				"name": "To Coordinator",
+				"channel": "a",
+				"description": "top level coordinator",
+				"poll": null,
+				"deployment": "597f3056ef66be0648ef5bd3",
+				"active": true,
+				"__v": 0,
+				"topics": [
+					"a/2",
+					"a/1",
+					"a/3",
+					"a/2/f",
+					"a/1/f",
+					"a/3/f"
+				]
+			}		
 		],
 		"sensor": [
 			{
@@ -218,7 +253,7 @@
 								"command": "1",
 								"label": "Heating",
 								"type": "toggle",
-								"icon": "",
+								"icon": "hot_tub",
 								"parameters": [
 									{
 										"value": "1",
@@ -236,7 +271,7 @@
 								"command": "2",
 								"type": "toggle",
 								"label": "Hot Water",
-								"icon": "",
+								"icon": "invert_colors",
 								"parameters": [
 									{
 										"value": "1",
@@ -299,7 +334,7 @@
 								"command": "2",
 								"type": "toggle",
 								"label": "Spots",
-								"icon": "",
+								"icon": "lightbulb_outline",
 								"parameters": [
 									{
 										"value": "1",
@@ -317,7 +352,7 @@
 								"command": "3",
 								"type": "toggle",
 								"label": "Plinth Lights",
-								"icon": "",
+								"icon": "lightbulb_outline",
 								"parameters": [
 									{
 										"value": "1",
@@ -335,7 +370,7 @@
 								"command": "4",
 								"type": "toggle",
 								"label": "Under Cabinet Lights",
-								"icon": "",
+								"icon": "lightbulb_outline",
 								"parameters": [
 									{
 										"value": "1",
@@ -353,7 +388,7 @@
 								"command": "5",
 								"type": "toggle",
 								"label": "Living Room Spot Lights",
-								"icon": "",
+								"icon": "lightbulb_outline",
 								"parameters": [
 									{
 										"value": "1",
@@ -371,7 +406,7 @@
 								"command": "6",
 								"type": "toggle",
 								"label": "Living Room Centre Light",
-								"icon": "",
+								"icon": "lightbulb_outline",
 								"parameters": [
 									{
 										"value": "1",
@@ -407,7 +442,7 @@
 								"command": "8",
 								"type": "toggle",
 								"label": "Outside Porch Light",
-								"icon": "",
+								"icon": "lightbulb_outline",
 								"parameters": [
 									{
 										"value": "1",
@@ -425,7 +460,7 @@
 								"group": "1",
 								"name": "Heating",
 								"description": "",
-								"icon": "",
+								"icon": "hot_tub",
 								"commands": [
 									1,
 									2
@@ -435,7 +470,7 @@
 								"group": "2",
 								"name": "Lighting Scenes",
 								"description": "",
-								"icon": "",
+								"icon": "settings_brightness",
 								"commands": [
 									3,
 									4
@@ -445,7 +480,7 @@
 								"group": "3",
 								"name": "By Room/Area",
 								"description": "group of groups",
-								"icon": "",
+								"icon": "business",
 								"commands": [],
 								"groups": [
 									{

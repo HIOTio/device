@@ -50,15 +50,19 @@ function init(delegators) {
 	};
 }
 function handleMessage(message, topic, messaging) {
-	console.log("got a delegator message");
+	debug("got a delegator message");
 	if (!message.p) {
-		console.log("badly formed delegator message, ");
-		console.log(message);
+		debug("badly formed delegator message, ");
+		debug(message);
 	} else {
 		if (topic.substring(1) === message.p.substring(1, message.p.length - 2)) {
-			if(!message.g){
+			if(message.p.substring(0,1)==="O"){
+				//got an onboarding message
+				// need to publish on message.i
+				messaging("O/" + message.i,JSON.stringify(message))
+			}else if(!message.g){
 				// no message groups, just fire the message 
-				messaging(message.p, JSON.stringify(message.b), 1)
+				messaging(message.p, JSON.stringify(message), 1)
 			}else{
 				// need to send more than one message
 				messageGroups.forEach((group)=>{
@@ -66,7 +70,7 @@ function handleMessage(message, topic, messaging) {
 						group.msgOut.forEach((groupItem)=>{
 							if(group.includeBody){
 								// combine the contents of the message with the hard-coded body from the config
-								Object.assign(groupItem.body,message.b);
+								Object.assign(groupItem.body,message);
 							}
 							messaging(groupItem.topic,JSON.stringify(groupItem.body));
 						});

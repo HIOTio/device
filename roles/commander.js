@@ -25,14 +25,14 @@ function init(_config, _mqttClient) {
 		next();
 	});
 	if (_config) {
-		console.log("building commander command list");
+		debug("building commander command list");
 		//just in case...
 		if (Array.isArray(_config.topics)) {
-			console.log(_config.topics);
+			debug(_config.topics);
 			_config.topics.forEach(function(topic, index) {
 				
 				topics.push(topic);
-				console.log(topic);
+				debug(topic);
 				topic.commands.cmds.forEach(function(cmd) {
 					cmd.topic = index;
 					commands.push(cmd);
@@ -50,8 +50,9 @@ function init(_config, _mqttClient) {
 			app.get('/', (req, res) => res.send('HIOT Commander!'));
 			app.get('/cmd/:topic/:command/:params', handleCommand);
 			app.get('/cmdList', returnCommands);
+			app.get('/statusList', getStatuses);
 			app.listen(_config.port);
-			console.log("listening on " + _config.port);
+			debug("listening on " + _config.port);
 		} else {
 			debug("Already listening");
 		}
@@ -69,7 +70,9 @@ function returnCommands(req, res, next) {
 		groups
 	});
 }
-
+function getStatuses(req,res,next){
+	res.json([]);
+}
 function handleCommand(req, res, next) {
 	var topic = req.params.topic;
 	var command = req.params.command;

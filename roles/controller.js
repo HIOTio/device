@@ -12,7 +12,7 @@
 var debug = require("debug")("/roles/controller.js");
 function init(controllers){
 	var topics=[];
-	console.log("setting up the controller");
+	debug("setting up the controller");
 	controllers.forEach((controller)=> {
 		if(controller.active){
 			var cont=require("../handlers/" + controller.handler)(controller);

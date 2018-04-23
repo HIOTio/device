@@ -28,7 +28,7 @@ function initialize() {
 	messaging = require("./messaging")(_config.mqttServers);
 	// set up a local messaging server (MQTT broker) if configured
 	if (_config.moscaEnabled) {
-		console.log("local messaging server running");
+		debug("local messaging server running");
 		localServer=messaging.server(_config);
 	}
 	mqttClient=messaging.connection;
