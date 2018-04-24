@@ -10,6 +10,7 @@
  ********************************************************************************/
 
 const {exec} = require("child_process");
+const debug = require("debug")("handlers/controller1.js");
 var cont={}; 
 var commands=[];
 module.exports= function(controller){
