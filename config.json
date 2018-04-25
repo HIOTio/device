@@ -313,7 +313,7 @@
 							{
 								"cmd": 5,
 								"topic": "1",
-								"command": "1",
+								"command": "3",
 								"type": "toggle",
 								"label": "Main Light",
 								"icon": "lightbulb_outline",
@@ -331,7 +331,7 @@
 							{
 								"cmd": 6,
 								"topic": "1",
-								"command": "2",
+								"command": "4",
 								"type": "toggle",
 								"label": "Spots",
 								"icon": "lightbulb_outline",
@@ -349,7 +349,7 @@
 							{
 								"cmd": 7,
 								"topic": "1",
-								"command": "3",
+								"command": "5",
 								"type": "toggle",
 								"label": "Plinth Lights",
 								"icon": "lightbulb_outline",
