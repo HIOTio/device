@@ -10,95 +10,116 @@
  ********************************************************************************/
 
 var mqtt = require("mqtt");
-var config={};
-var debug=require("debug")("messaging.js");
-var mqttClient = {};
-var localServer={};
-var connection={};
-var handlers=[];
-var connected =false;
-function connect(mqttServers){
-	debug("connecting to messaging server");
-	mqttClient= mqtt.connect({
-        host: mqttServers[0].mqttServerIP,
-        port: mqttServers[0].mqttServerPort
-    });
-	mqttClient.on("connect", ()=> {
-		debug("connected to "+ mqttServers[0].mqttServerIP + 
-				" on port " + mqttServers[0].mqttServerPort);
-		connected=true;
-		subscribe();
-	});
-	
-	return mqttClient;
+var config = {};
+var debug = require("debug")("messaging.js");
+var client={};
+var localServer = {};
+var connection = {};
+var handlers = {
+	"d" : [],
+	"u" : [],
+	"p" : []
+};
+
+function connectClient(broker,description,mqttServers){
+	debug("connecting to " + description +"  messaging server" + JSON.stringify({
+		host : mqttServers[broker].mqttServerIP,
+		port : mqttServers[broker].mqttServerPort
+	}));
+ var _client= mqtt.connect({
+	host : mqttServers[broker].mqttServerIP,
+	port : mqttServers[broker].mqttServerPort
+});
+_client.on("connect", () => {
+	debug("connected to " + description + " messaging " + mqttServers["d"].mqttServerIP +
+		" on port " + mqttServers["d"].mqttServerPort);
+
+	subscribe(broker);
+});
+return _client;
 }
-function subscribe(){
-	if(connected){
-		handlers.forEach((handler)=>{
-			mqttClient.subscribe(handler.topic);
+function connect(mqttServers) {
+	client["d"]=connectClient("d","downstream",mqttServers);
+	client["u"]=connectClient("u","upstream",mqttServers);
+	client["p"]=connectClient("p","platform",mqttServers);
+
+
+	return client;
+}
+function subscribe(broker) {
+	if (client[broker].connected) {
+		handlers[broker].forEach((handler) => {
+			client[broker].subscribe(handler.topic);
 			debug("subscribed to " + handler.topic)
+			
 		})
 
-		mqttClient.on("message", function(topic, _message) {
+		client[broker].on("message", (topic, _message) =>{
 			//find the relevant handler
-			handlers.forEach((handler)=>{
-				if(handler.topic==topic){
+			handlers[broker].forEach((handler) => {
+				if (handler.topic == topic) {
 					debug("got message on topic " + topic + ", handling using function " + handler.handler.name);
-					handler.handler(JSON.parse(_message.toString()),topic,send);
+					handler.handler(JSON.parse(_message.toString()), topic, send);
 				}
-			});	
+			});
 		});
-	}else{
+	} else {
 		// need to wait until we're connected
 		// this is nasty....
 		debug("waiting");
-		setTimeout(subscribe(topics,2000));
+		//setTimeout(subscribe(broker, 2000));
 	}
 }
 
-function send(topic, message, retryLevel){
+function send(topic, message, retryLevel) {
+	var broker="u";
+	if(topic.substring(0,1)==="P"){
+		broker="p";
+		
+	}
+	else if(topic[0] === topic[0].toUpperCase()){
+		broker="d";
+	}
+	client[broker].publish(topic, message);
 
-	mqttClient.publish(topic,message);
 }
-function close(callback){
-	if(localServer.clients){
+
+function close(callback) {
+	if (localServer.clients) {
 		localServer.close();
 		//callback seems to fire too soon, so doing this...
-		while(!localServer.closed){
-			
+		while (!localServer.closed) {
+
 		}
 		callback();
-	}else{
+	} else {
 		callback();
 	}
 
-	
+
 }
-function server(config){
-	  var mosca  =require("mosca");
-      localServer= new mosca.Server({port:config.moscaPort});
-      return localServer;
-      
+function server(config) {
+	var mosca = require("mosca");
+	localServer = new mosca.Server({
+		port : config.moscaPort
+	});
+	return localServer;
+
 }
-function addSubscriptions(topics){
+function addSubscriptions(client, topics) {
 	topics.forEach((topic) => {
-		handlers.push(topic);
-		debug("creating subscription for topic " + topic.topic );
+		handlers[client].push(topic);
+		debug("creating " + client + " subscription for topic " + topic.topic);
 	});
 }
 
-module.exports = function(config){
-	connection=connect(config);
-	return{
-		connection,
-		addSubscriptions,
-		subscribe,
-		close,
-		server,
+module.exports = function(config) {
+	return {
+		connections : connect(config),
+		addSubscriptions ,
+		subscribe ,
+		close ,
+		server ,
 		send
 	}
 }
-
-
-
-

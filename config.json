@@ -186,11 +186,11 @@
 				]
 			},
 			{
-				"_id":"1222222",
+				"_id": "1222222",
 				"handler": "agg-forwarder",
-				"name":"Forwarder",
-				"channel":"a/3/f",
-				"poll":null,
+				"name": "Forwarder",
+				"channel": "a/3/f",
+				"poll": null,
 				"deployment": "597f3056ef66be0648ef5bd3",
 				"active": true,
 				"__v": 0,
@@ -202,7 +202,7 @@
 				]
 			},
 			{
-				"_id":"098765544",
+				"_id": "098765544",
 				"handler": "agg-top",
 				"name": "To Coordinator",
 				"channel": "a",
@@ -219,7 +219,7 @@
 					"a/1/f",
 					"a/3/f"
 				]
-			}		
+			}
 		],
 		"sensor": [
 			{
@@ -526,18 +526,24 @@
 	},
 	"moscaEnabled": true,
 	"moscaPort": 1883,
-	"mqttServers": [
-		{
+	"mqttServers": {
+		"d": {
 			"mqttServerIP": "127.0.0.1",
 			"mqttServerPort": "1883",
 			"priority": 1,
 			"_id": "59df294d3a092a2b805b6570"
 		},
-		{
-			"mqttServerIP": "10.0.0.1",
+		"u": {
+			"mqttServerIP": "127.0.0.1",
 			"mqttServerPort": "1883",
 			"priority": 1,
-			"_id": "59df294d3a092a2b805b656f"
+			"_id": "59df294d3a092a2b805b6570"
+		},
+		"p": {
+			"mqttServerIP": "127.0.0.1",
+			"mqttServerPort": "1883",
+			"priority": 1,
+			"_id": "59df294d3a092a2b805b6570"
 		}
-	]
+	}
 }

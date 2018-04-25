@@ -39,10 +39,6 @@ function init(device,emitter) {
 		],
 		topics : [
 			{
-				"topic" : "O/" + deviceId,
-				"handler" : onBoardMsg
-			},
-			{
 				"topic" : "C/" + devicePath,
 				"handler" : configMsg
 			},
@@ -58,8 +54,26 @@ function init(device,emitter) {
 	}
 }
 module.exports = {
-	init
+	init,
+	onBoard
 };
+
+function onBoard(config){
+	//TODO: find an available MQTT broker, going to assume a dns record can be added for hiotmessaging.local)
+	
+	const mqtt=require("mqtt");
+	var obClient=mqtt.connect({
+		hostname:"hipmessaging.local"
+	})
+	//send onboarding message
+	obClient.on("connect",function(){
+		obClient.subscribe("O/" + device.deviceId)
+	});
+	obClient.on("message",(topic,message)=>{
+		config.setConfig(message.toString())
+	});
+}
+
 function getHealth(messaging){
 	debug("sending health information");
 	info.currentLoad((stats)=>{

@@ -68,6 +68,10 @@ return {
 	getConfig () {
 		//reload the configuration from disk
 		var confTemp = JSON.parse(fs.readFileSync("./config.json", "utf8"));
+		// If we don't have a devicePath, then we need to on-board
+		if(!confTemp.device.devicePath){
+			return [];
+		}
 		_config.roleChannels = confTemp.roleChannels,
 		_config.moscaEnabled = confTemp.moscaEnabled,
 		_config.moscaPort = confTemp.moscaPort,
