@@ -20,11 +20,9 @@ const device = require("./device");
 var mqttClient = {};
 var restarting = false; //waittoClose was looping...
 var localServer = {};
-var subscriptions = [];
 var timers = [];
 function initialize() {
 	var _config = config.getConfig();
-	console.log(subscriptions)
 	//if we don't have a device path, then we need to on-board
 	if (!_config.device.devicePath) {
 		//pass the config object to the device object
@@ -123,12 +121,7 @@ function addTimers(_timers) {
 		timers.push(timedEvent);
 	});
 }
-function subsClear() {
-	// unsubscribe on all channels
 
-	//reset the subscriptions variable
-	subscriptions = [];
-}
 function subsAdd(client, topics) {
 	messaging.addSubscriptions(client, topics);
 }
@@ -143,7 +136,6 @@ function reset() {
 	closeBroker("u");
 	closeBroker("p");
 	messaging.close();
-	subsClear();
 	timersClear();
 	waitToClose();
 }
