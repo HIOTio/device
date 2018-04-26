@@ -1,11 +1,11 @@
 /********************************************************************************
- * Copyright (c) 2017-2018 Mark Healy 1
+ * Copyright (c) 2017-2018 Mark Healy 
  *
- * This program and the accompanying materials are made available under the 2
+ * This program and the accompanying materials are made available under the 
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
  *
- * SPDX-License-Identifier: EPL-2.0 3
+ * SPDX-License-Identifier: EPL-2.0 
  *
  ********************************************************************************/
 var fs = require("fs");

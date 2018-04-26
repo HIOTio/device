@@ -12,7 +12,9 @@
 var debug = require("debug")("aggregator.js");
 function init(aggList) {
 	var timers = [];
-	var topics = [];
+	var topics ={
+	downstream:[]
+};
 	aggList.forEach((aggregator) => {
 		if (aggregator.active) {
 			var agg = require("../handlers/" + aggregator.handler)(aggregator);
@@ -27,12 +29,12 @@ function init(aggList) {
 			aggregator.topics.forEach((topic) => {
 				[ 'v', 'r', 'q' ].forEach((otherTopic) => {
 
-					topics.push({
+					topics.downstream.push({
 						topic : otherTopic + topic.substring(1),
 						handler : agg.handleOther
 					});
 				});
-				topics.push({
+				topics.downstream.push({
 					topic ,
 					handler : agg.handleMessage
 				})

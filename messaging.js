@@ -47,6 +47,8 @@ function connect(mqttServers) {
 	return client;
 }
 function subscribe(broker) {
+	console.log(client[broker])
+	debug("setting up subs for client "  + broker)
 	if (client[broker].connected) {
 		handlers[broker].forEach((handler) => {
 			client[broker].subscribe(handler.topic);
@@ -61,6 +63,7 @@ function subscribe(broker) {
 					debug("got message on topic " + topic + ", handling using function " + handler.handler.name);
 					handler.handler(JSON.parse(_message.toString()), topic, send);
 				}
+	
 			});
 		});
 	} else {
@@ -86,14 +89,8 @@ function send(topic, message, retryLevel) {
 
 function close(callback) {
 	if (localServer.clients) {
-		localServer.close();
-		//callback seems to fire too soon, so doing this...
-		while (!localServer.closed) {
-
-		}
-		callback();
-	} else {
-		callback();
+		localServer.close(()=>{console.log("mosca closed")});
+		
 	}
 
 
@@ -112,12 +109,18 @@ function addSubscriptions(client, topics) {
 		debug("creating " + client + " subscription for topic " + topic.topic);
 	});
 }
-
+function unsub(broker){
+	handlers[broker].forEach((topic)=>{
+		client[broker].unsubscribe(topic.topic)
+		delete handlers[broker][topic];
+	})
+}
 module.exports = function(config) {
 	return {
 		connections : connect(config),
 		addSubscriptions ,
 		subscribe ,
+		unsub,
 		close ,
 		server ,
 		send

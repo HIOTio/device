@@ -33,14 +33,16 @@
 var debug = require("debug")("/roles/delegator.js");
 var messageGroups=[];
 function init(delegators) {
-	var topics = [];
+	var topics ={
+	upstream:[]
+};
 	delegators.forEach((delegator) => {
 		if(delegator.groups){
 			delegator.groups.forEach((group)=>{
 				messageGroups.push(group);
 			});
 		}
-		topics.push({
+		topics.upstream.push({
 			topic : delegator.path,
 			handler : handleMessage
 		});
@@ -62,7 +64,7 @@ function handleMessage(message, topic, messaging) {
 				messaging("O/" + message.i,JSON.stringify(message))
 			}else if(!message.g){
 				// no message groups, just fire the message 
-				messaging(message.p, JSON.stringify(message), 1)
+				messaging(message.p, JSON.stringify(message.m), 1)
 			}else{
 				// need to send more than one message
 				messageGroups.forEach((group)=>{

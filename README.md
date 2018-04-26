@@ -1,7 +1,7 @@
 Eclipse HIP&trade; Device
 
 This is a NodeJS implementation of the HIP device functionality.
-All roles have been enabled and configured by default and some tweaks to the config.json configuration file should be enough to connect the device to the [Platform](https://githun.com/HIOTio/platform) via the [Coordinator Link](https://github.com/HIOTio/coordinator_link)
+All roles have been enabled and configured by default and some tweaks to the config.json configuration file should be enough to connect the device to the [Platform](https://github.com/HIOTio/platform) via the [Coordinator Link](https://github.com/HIOTio/coordinator_link)
 
 In order to run the device you need to have [NodeJS](https://nodejs.org) installed.
 

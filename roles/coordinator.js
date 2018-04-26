@@ -29,19 +29,22 @@ var dfeploymentId='';
 function init(coordinator, _deploymentMessaging, _deploymentId) {
 	deploymentMessaging = _deploymentMessaging;
 	deploymentId=_deploymentId;
-	var topics = [];
+	var topics = {
+			downstream:[],
+			upstream:[]
+	};
 	['a','b','c','d','h','n','s','v'].forEach((topic)=> {
-		topics.push({
+		topics.downstream.push({
 			topic,
 			handler:coorHandler
 		})
 	});
-	topics.push(
+	topics.upstream.push(
 			{
 				topic:"z",
 				handler:coordComms
 			});
-	topics.push({
+	topics.upstream.push({
 		topic:"Z",
 		handler:coordComms
 	});

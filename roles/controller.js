@@ -11,12 +11,12 @@
 
 var debug = require("debug")("/roles/controller.js");
 function init(controllers){
-	var topics=[];
+	var topics={upstream:[]};
 	debug("setting up the controller");
 	controllers.forEach((controller)=> {
 		if(controller.active){
 			var cont=require("../handlers/" + controller.handler)(controller);
-			topics.push({
+			topics.upstream.push({
 				topic: controller.topic,
 				handler: cont.handleMessage
 			})

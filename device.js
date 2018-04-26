@@ -1,11 +1,11 @@
 /********************************************************************************
- * Copyright (c) 2017-2018 Mark Healy 1
+ * Copyright (c) 2017-2018 Mark Healy 
  *
- * This program and the accompanying materials are made available under the 2
+ * This program and the accompanying materials are made available under the 
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
  *
- * SPDX-License-Identifier: EPL-2.0 3
+ * SPDX-License-Identifier: EPL-2.0 
  *
  ********************************************************************************/
 
@@ -22,22 +22,21 @@ const info=require('systeminformation');
 var config = {};
 var deviceId='';
 var devicePath='';
-var em={};
 
 // need to re-write the init function for each role (and the device) to return a list of subscriptions and handlers
 function init(device,emitter) {
-	em=emitter;
-	deviceId= device.id;
-	config=require("./config")(em);
+	deviceId= device.deviceId;
+	config=require("./config")(emitter);
 	devicePath = device.devicePath;
 	return {
 		timers : [
 			{
-				poll : 6000,
+				poll : device.healthTimer,
 				handler : getHealth,
 			}
 		],
-		topics : [
+		topics :{
+				upstream : [
 			{
 				"topic" : "C/" + devicePath,
 				"handler" : configMsg
@@ -51,6 +50,7 @@ function init(device,emitter) {
 				"handler" : handlerMsg
 			}
 		]
+		}
 	}
 }
 module.exports = {
@@ -58,19 +58,22 @@ module.exports = {
 	onBoard
 };
 
-function onBoard(config){
+function onBoard(configSettings,configObject){
 	//TODO: find an available MQTT broker, going to assume a dns record can be added for hiotmessaging.local)
 	
 	const mqtt=require("mqtt");
 	var obClient=mqtt.connect({
-		hostname:"hipmessaging.local"
+		hostname:"127.0.0.1"
 	})
 	//send onboarding message
-	obClient.on("connect",function(){
-		obClient.subscribe("O/" + device.deviceId)
+	obClient.on("connect",() =>{
+		console.log("subscribed for onboarding")
+		obClient.subscribe("O/" + configSettings.device.deviceId)
+		obClient.publish("o",JSON.stringify({"deviceId": configSettings.device.deviceId}))
 	});
 	obClient.on("message",(topic,message)=>{
-		config.setConfig(message.toString())
+		console.log(message.toString())
+		configObject.setConfig(message.toString())
 	});
 }
 
@@ -82,13 +85,11 @@ function getHealth(messaging){
 	
 }
 
-function onBoardMsg(message,topic, messaging) {
-}
 function configMsg(message, topic, messaging) {
 	//check to see if the config message is valid
 	if (message.device) {
 		//have a configuration included
-		config.setConfig(message);
+		config.setConfig(JSON.stringify(message));
 	} else {
 		//no config in message, so send current config back to the platform
 		messaging("c/" + devicePath, JSON.stringify(config.getConfig()));

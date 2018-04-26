@@ -16,7 +16,7 @@ var listening = false;
 var mqttClient;
 var commands = [];
 var groups = [];
-var topics = [];
+var topics = { downstream:[]};
 var retTopics = [];
 function init(_config, _mqttClient) {
 	app.use(function(req, res, next) {
@@ -27,12 +27,12 @@ function init(_config, _mqttClient) {
 	if (_config) {
 		debug("building commander command list");
 		//just in case...
+		
 		if (Array.isArray(_config.topics)) {
 			debug(_config.topics);
 			_config.topics.forEach(function(topic, index) {
 				
-				topics.push(topic);
-				debug(topic);
+				topics.downstream.push(topic);
 				topic.commands.cmds.forEach(function(cmd) {
 					cmd.topic = index;
 					commands.push(cmd);
@@ -77,8 +77,8 @@ function handleCommand(req, res, next) {
 	var topic = req.params.topic;
 	var command = req.params.command;
 	var params = JSON.parse(req.params.params);
-	debug(topics[topic].path);
-	mqttClient.publish(topics[topic].path, "{ \"c\":\"" + command + "\",\"p\":" + params + "}", {},
+	debug(topics.downstream[topic].path);
+	mqttClient["d"].publish(topics.downstream[topic].path, "{ \"c\":\"" + command + "\",\"p\":" + params + "}", {},
 		function(err) {
 			if (err) {
 				debug(err);
