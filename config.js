@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  ********************************************************************************/
-const handler = require("./handler");
+
 const debug = require("debug")("config.js");
 const fs = require("fs");
 var em={};
@@ -66,6 +66,7 @@ function getRoles() {
 }
 module.exports = function(emitter){
 	em=emitter;
+
 return {
 	getConfig () {
 		//reload the configuration from disk

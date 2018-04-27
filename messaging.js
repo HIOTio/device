@@ -47,7 +47,6 @@ function connect(mqttServers) {
 	return client;
 }
 function subscribe(broker) {
-	console.log(client[broker])
 	debug("setting up subs for client "  + broker)
 	if (client[broker].connected) {
 		handlers[broker].forEach((handler) => {
@@ -89,7 +88,7 @@ function send(topic, message, retryLevel) {
 
 function close(callback) {
 	if (localServer.clients) {
-		localServer.close(()=>{console.log("mosca closed")});
+		localServer.close(()=>{debug("Mosca server has been stopped")});
 		
 	}
 

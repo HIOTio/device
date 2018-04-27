@@ -1,1 +1,551 @@
-{"device":{"deviceId":"ABCDEF123456","healthTimer":10000,"name":"basic sensor/controller device","description":"This is the bottom level device","deployment":"597f3056ef66be0648ef5bd3","devicePath":"1/2/3/4"},"roleChannels":{"delegator":[{"_id":"59df282a3a092a2b805b6567","deployment":"597f3056ef66be0648ef5bd3","description":"Top level broker","name":"first broker","handler":"59bfda6ed7649a3070551ad9","path":"B/1","active":true,"__v":0},{"_id":"59df282a3a092a2b805b6567","deployment":"597f3056ef66be0648ef5bd3","description":"Second level broker","name":"first broker","handler":"59bfda6ed7649a3070551ad9","path":"B/1/A","active":true,"__v":0,"groups":[{"id":"1","name":"Turn all the lights off","includeBody":false,"msgOut":[{"topic":"x/1/1/f1","body":{"c":"1","p":[{"1":"0"}]}},{"topic":"x/1/1/f1","body":{"c":"3","p":[{"1":"0"}]}}]},{"id":"2","name":"set lighting level","includeBody":true,"msgOut":[{"topic":"x/1/1/f1","body":{"c":"1"}},{"topic":"x/1/1/f1","body":{"c":"3"}}]}]}],"coordinator":{"platformPort":1883,"platformServer":"127.0.0.1"},"controller":[{"id":"59c393ee54674b1ce4982a69","description":"Lighting controller - First Floor","name":"LWRF - F1","handler":"controller1","deployment":"597f3056ef66be0648ef5bd3","controllerId":"cont1203","topic":"X/1/A/f","active":true,"commands":[{"id":"1","name":"porch light on/off","e":"/home/pi/433Utils/RPi_utils/codesend 15648532"},{"id":"2","name":"garden light on/off","e":"/home/pi/433Utils/RPi_utils/codesend 15648536"},{"id":"3","name":"kitchen lights on","e":"/home/pi/lightwaverf-pi/send R1S1D1 1 1"},{"id":"4","name":"kitchen lights off","e":"/home/pi/lightwaverf-pi/send R1S1D1 1 0"},{"id":"5","name":"sitting room spots on","e":"/home/pi/lightwaverf-pi/send R2S2D1 1 1"},{"id":"6","name":"sitting room spots off","e":"/home/pi/lightwaverf-pi/send R2S2D1 1 0"},{"id":"7","name":"sitting room centre on","e":"/home/pi/lightwaverf-pi/send R2S1D1 1 1"},{"id":"8","name":"sitting room centre off","e":"/home/pi/lightwaverf-pi/send R2S1D1 1 0"},{"id":"9","name":"send to console","e":"msg"},{"id":"10","name":"Porch Light Off","e":"/home/pi/433Utils/RPi_utils/codesend 15648529"},{"id":"11","name":"Garden Light Off","e":"/home/pi/433Utils/RPi_utils/codesend 15648530"}]}],"aggregator":[{"_id":"59db76cdccc548be30e5249f","handler":"agg1","name":"Aggregator1","channel":"a/1","description":"some random aggregator","poll":300000,"deployment":"597f3056ef66be0648ef5bd3","active":true,"__v":0,"topics":["s/1/2/3/4/5/6/7/8/8/9/9/9/9","s/4/5/22","s/3/4/5"]},{"_id":"59db76cdccc548be30e5249a","handler":"agg2","name":"Aggregator2","channel":"a/2","description":"some random aggregator","poll":60000,"deployment":"597f3056ef66be0648ef5bd3","active":true,"__v":0,"topics":["s/1/2/3/4/5/6/7/8/8/9/9/9/9","s/4/5/22","a/1/2/3/4/5"]},{"_id":"1222222","handler":"agg-forwarder","name":"Forwarder","channel":"a/3/f","poll":null,"deployment":"597f3056ef66be0648ef5bd3","active":true,"__v":0,"topics":["d/1/2/3/4","h/1/2/3/4","d/ABCDEF123456","o"]},{"_id":"098765544","handler":"agg-top","name":"To Coordinator","channel":"a","description":"top level coordinator","poll":null,"deployment":"597f3056ef66be0648ef5bd3","active":true,"__v":0,"topics":["a/2","a/1","a/3","a/2/f","a/1/f","a/3/f"]}],"sensor":[{"_id":"59db98407e3a9fb060064ebf","id":"sn1234","name":"first real sensor","topic":"s/1/2/3/4/5/6/7/8/8/9/9/9/9","description":"some random sensor","handler":"sensor1","poll":60000,"config":{"minValue":1234,"range":100},"location":"59bfd3ba9db46f37b858ed29","active":true,"__v":0}],"commander":{"port":3001,"topics":[{"path":"X/1/A/f","name":"Lighting","commands":{"cmds":[{"cmd":1,"topic":"2","command":"1","label":"Heating","type":"toggle","icon":"hot_tub","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":2,"topic":"2","command":"2","type":"toggle","label":"Hot Water","icon":"invert_colors","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":3,"topic":"3","command":"1","type":"on-off","label":"All Off","icon":"brightness_low","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":4,"topic":"3","command":"1","type":"on-off","label":"Night-time","icon":"brightness_medium","parameters":[]},{"cmd":5,"topic":"1","command":"3","type":"toggle","label":"Main Light","icon":"lightbulb_outline","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":6,"topic":"1","command":"4","type":"toggle","label":"Spots","icon":"lightbulb_outline","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":7,"topic":"1","command":"5","type":"toggle","label":"Plinth Lights","icon":"lightbulb_outline","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":8,"topic":"1","command":"4","type":"toggle","label":"Under Cabinet Lights","icon":"lightbulb_outline","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":9,"topic":"1","command":"5","type":"toggle","label":"Living Room Spot Lights","icon":"lightbulb_outline","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":10,"topic":"1","command":"6","type":"toggle","label":"Living Room Centre Light","icon":"lightbulb_outline","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":11,"topic":"1","command":"7","type":"toggle","label":"Internal Porch Light","icon":"","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]},{"cmd":12,"topic":"1","command":"8","type":"toggle","label":"Outside Porch Light","icon":"lightbulb_outline","parameters":[{"value":"1","text":"On"},{"value":"2","text":"Off"}]}],"groups":[{"group":"1","name":"Heating","description":"","icon":"hot_tub","commands":[1,2]},{"group":"2","name":"Lighting Scenes","description":"","icon":"settings_brightness","commands":[3,4]},{"group":"3","name":"By Room/Area","description":"group of groups","icon":"business","commands":[],"groups":[{"group":"4","name":"Kitchen","commands":[5,6,7,8]},{"group":"5","name":"Living Room","commands":[9,10]},{"group":"6","name":"Porch","commands":[11,12]},{"group":"7","name":"Outside","commands":[12]}]}]}}]}},"moscaEnabled":true,"moscaPort":1883,"mqttServers":{"d":{"mqttServerIP":"127.0.0.1","mqttServerPort":"1883","priority":1,"_id":"59df294d3a092a2b805b6570"},"u":{"mqttServerIP":"127.0.0.1","mqttServerPort":"1883","priority":1,"_id":"59df294d3a092a2b805b6570"},"p":{"mqttServerIP":"127.0.0.1","mqttServerPort":"1883","priority":1,"_id":"59df294d3a092a2b805b6570"}}}
+{
+	"device": {
+		"deviceId": "ABCDEF123456",
+	"healthTimer": 10000,
+		"name": "basic sensor/controller device",
+		"description": "This is the bottom level device",
+		"deployment": "597f3056ef66be0648ef5bd3",
+		"devicePath": "1/2/3/4"
+	},
+	"roleChannels": {
+		"delegator": [
+			{
+				"_id": "59df282a3a092a2b805b6567",
+				"deployment": "597f3056ef66be0648ef5bd3",
+				"description": "Top level broker",
+				"name": "first broker",
+				"handler": "59bfda6ed7649a3070551ad9",
+				"path": "B/1",
+				"active": true,
+				"__v": 0
+			},
+			{
+				"_id": "59df282a3a092a2b805b6567",
+				"deployment": "597f3056ef66be0648ef5bd3",
+				"description": "Second level broker",
+				"name": "first broker",
+				"handler": "59bfda6ed7649a3070551ad9",
+				"path": "B/1/A",
+				"active": true,
+				"__v": 0,
+				"groups": [
+					{
+						"id": "1",
+						"name": "Turn all the lights off",
+						"includeBody": false,
+						"msgOut": [
+							{
+								"topic": "x/1/1/f1",
+								"body": {
+									"c": "1",
+									"p": [
+										{
+											"1": "0"
+										}
+									]
+								}
+							},
+							{
+								"topic": "x/1/1/f1",
+								"body": {
+									"c": "3",
+									"p": [
+										{
+											"1": "0"
+										}
+									]
+								}
+							}
+						]
+					},
+					{
+						"id": "2",
+						"name": "set lighting level",
+						"includeBody": true,
+						"msgOut": [
+							{
+								"topic": "x/1/1/f1",
+								"body": {
+									"c": "1"
+								}
+							},
+							{
+								"topic": "x/1/1/f1",
+								"body": {
+									"c": "3"
+								}
+							}
+						]
+					}
+				]
+			}
+		],
+		"coordinator": {
+			"platformPort": 1883,
+			"platformServer": "127.0.0.1"
+		},
+		"controller": [
+			{
+				"id": "59c393ee54674b1ce4982a69",
+				"description": "Lighting controller - First Floor",
+				"name": "LWRF - F1",
+				"handler": "controller1",
+				"deployment": "597f3056ef66be0648ef5bd3",
+				"controllerId": "cont1203",
+				"topic": "X/1/A/f",
+				"active": true,
+				"commands": [
+					{
+						"id": "1",
+						"name": "porch light on/off",
+						"e": "/home/pi/433Utils/RPi_utils/codesend 15648532"
+					},
+					{
+						"id": "2",
+						"name": "garden light on/off",
+						"e": "/home/pi/433Utils/RPi_utils/codesend 15648536"
+					},
+					{
+						"id": "3",
+						"name": "kitchen lights on",
+						"e": "/home/pi/lightwaverf-pi/send R1S1D1 1 1"
+					},
+					{
+						"id": "4",
+						"name": "kitchen lights off",
+						"e": "/home/pi/lightwaverf-pi/send R1S1D1 1 0"
+					},
+					{
+						"id": "5",
+						"name": "sitting room spots on",
+						"e": "/home/pi/lightwaverf-pi/send R2S2D1 1 1"
+					},
+					{
+						"id": "6",
+						"name": "sitting room spots off",
+						"e": "/home/pi/lightwaverf-pi/send R2S2D1 1 0"
+					},
+					{
+						"id": "7",
+						"name": "sitting room centre on",
+						"e": "/home/pi/lightwaverf-pi/send R2S1D1 1 1"
+					},
+					{
+						"id": "8",
+						"name": "sitting room centre off",
+						"e": "/home/pi/lightwaverf-pi/send R2S1D1 1 0"
+					},
+					{
+						"id": "9",
+						"name": "send to console",
+						"e": "msg"
+					},
+					{
+						"id": "10",
+						"name": "Porch Light Off",
+						"e": "/home/pi/433Utils/RPi_utils/codesend 15648529"
+					},
+					{
+						"id": "11",
+						"name": "Garden Light Off",
+						"e": "/home/pi/433Utils/RPi_utils/codesend 15648530"
+					}
+				]
+			}
+		],
+		"aggregator": [
+			{
+				"_id": "59db76cdccc548be30e5249f",
+				"handler": "agg1",
+				"name": "Aggregator1",
+				"channel": "a/1",
+				"description": "some random aggregator",
+				"poll": 300000,
+				"deployment": "597f3056ef66be0648ef5bd3",
+				"active": true,
+				"__v": 0,
+				"topics": [
+					"s/1/2/3/4/5/6/7/8/8/9/9/9/9",
+					"s/4/5/22",
+					"s/3/4/5"
+				]
+			},
+			{
+				"_id": "59db76cdccc548be30e5249a",
+				"handler": "agg2",
+				"name": "Aggregator2",
+				"channel": "a/2",
+				"description": "some random aggregator",
+				"poll": 60000,
+				"deployment": "597f3056ef66be0648ef5bd3",
+				"active": true,
+				"__v": 0,
+				"topics": [
+					"s/1/2/3/4/5/6/7/8/8/9/9/9/9",
+					"s/4/5/22",
+					"a/1/2/3/4/5"
+				]
+			},
+			{
+				"_id": "1222222",
+				"handler": "agg-forwarder",
+				"name": "Forwarder",
+				"channel": "a/3/f",
+				"poll": null,
+				"deployment": "597f3056ef66be0648ef5bd3",
+				"active": true,
+				"__v": 0,
+				"topics": [
+					"d/1/2/3/4",
+					"h/1/2/3/4",
+					"d/ABCDEF123456",
+					"o"
+				]
+			},
+			{
+				"_id": "098765544",
+				"handler": "agg-top",
+				"name": "To Coordinator",
+				"channel": "a",
+				"description": "top level coordinator",
+				"poll": null,
+				"deployment": "597f3056ef66be0648ef5bd3",
+				"active": true,
+				"__v": 0,
+				"topics": [
+					"a/2",
+					"a/1",
+					"a/3",
+					"a/2/f",
+					"a/1/f",
+					"a/3/f"
+				]
+			}
+		],
+		"sensor": [
+			{
+				"_id": "59db98407e3a9fb060064ebf",
+				"id": "sn1234",
+				"name": "first real sensor",
+				"topic": "s/1/2/3/4/5/6/7/8/8/9/9/9/9",
+				"description": "some random sensor",
+				"handler": "sensor1",
+				"poll": 60000,
+				"config": {
+					"minValue": 1234,
+					"range": 100
+				},
+				"location": "59bfd3ba9db46f37b858ed29",
+				"active": true,
+				"__v": 0
+			}
+		],
+		"commander": {
+			"port": 3001,
+			"topics": [
+				{
+					"path": "X/1/A/f",
+					"name": "Lighting",
+					"commands": {
+						"cmds": [
+							{
+								"cmd": 1,
+								"topic": "2",
+								"command": "1",
+								"label": "Heating",
+								"type": "toggle",
+								"icon": "hot_tub",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 2,
+								"topic": "2",
+								"command": "2",
+								"type": "toggle",
+								"label": "Hot Water",
+								"icon": "invert_colors",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 3,
+								"topic": "3",
+								"command": "1",
+								"type": "on-off",
+								"label": "All Off",
+								"icon": "brightness_low",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 4,
+								"topic": "3",
+								"command": "1",
+								"type": "on-off",
+								"label": "Night-time",
+								"icon": "brightness_medium",
+								"parameters": []
+							},
+							{
+								"cmd": 5,
+								"topic": "1",
+								"command": "3",
+								"type": "toggle",
+								"label": "Main Light",
+								"icon": "lightbulb_outline",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 6,
+								"topic": "1",
+								"command": "4",
+								"type": "toggle",
+								"label": "Spots",
+								"icon": "lightbulb_outline",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 7,
+								"topic": "1",
+								"command": "5",
+								"type": "toggle",
+								"label": "Plinth Lights",
+								"icon": "lightbulb_outline",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 8,
+								"topic": "1",
+								"command": "4",
+								"type": "toggle",
+								"label": "Under Cabinet Lights",
+								"icon": "lightbulb_outline",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 9,
+								"topic": "1",
+								"command": "5",
+								"type": "toggle",
+								"label": "Living Room Spot Lights",
+								"icon": "lightbulb_outline",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 10,
+								"topic": "1",
+								"command": "6",
+								"type": "toggle",
+								"label": "Living Room Centre Light",
+								"icon": "lightbulb_outline",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 11,
+								"topic": "1",
+								"command": "7",
+								"type": "toggle",
+								"label": "Internal Porch Light",
+								"icon": "",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							},
+							{
+								"cmd": 12,
+								"topic": "1",
+								"command": "8",
+								"type": "toggle",
+								"label": "Outside Porch Light",
+								"icon": "lightbulb_outline",
+								"parameters": [
+									{
+										"value": "1",
+										"text": "On"
+									},
+									{
+										"value": "2",
+										"text": "Off"
+									}
+								]
+							}
+						],
+						"groups": [
+							{
+								"group": "1",
+								"name": "Heating",
+								"description": "",
+								"icon": "hot_tub",
+								"commands": [
+									1,
+									2
+								]
+							},
+							{
+								"group": "2",
+								"name": "Lighting Scenes",
+								"description": "",
+								"icon": "settings_brightness",
+								"commands": [
+									3,
+									4
+								]
+							},
+							{
+								"group": "3",
+								"name": "By Room/Area",
+								"description": "group of groups",
+								"icon": "business",
+								"commands": [],
+								"groups": [
+									{
+										"group": "4",
+										"name": "Kitchen",
+										"commands": [
+											5,
+											6,
+											7,
+											8
+										]
+									},
+									{
+										"group": "5",
+										"name": "Living Room",
+										"commands": [
+											9,
+											10
+										]
+									},
+									{
+										"group": "6",
+										"name": "Porch",
+										"commands": [
+											11,
+											12
+										]
+									},
+									{
+										"group": "7",
+										"name": "Outside",
+										"commands": [
+											12
+										]
+									}
+								]
+							}
+						]
+					}
+				}
+			]
+		}
+	},
+	"moscaEnabled": true,
+	"moscaPort": 1883,
+	"mqttServers": {
+		"d": {
+			"mqttServerIP": "127.0.0.1",
+			"mqttServerPort": "1883",
+			"priority": 1,
+			"_id": "59df294d3a092a2b805b6570"
+		},
+		"u": {
+			"mqttServerIP": "127.0.0.1",
+			"mqttServerPort": "1883",
+			"priority": 1,
+			"_id": "59df294d3a092a2b805b6570"
+		},
+		"p": {
+			"mqttServerIP": "127.0.0.1",
+			"mqttServerPort": "1883",
+			"priority": 1,
+			"_id": "59df294d3a092a2b805b6570"
+		}
+	}
+}
+	

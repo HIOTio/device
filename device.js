@@ -18,15 +18,15 @@
  * 
  */
 const debug = require("debug")("device.js");
-const info=require('systeminformation');
+const info = require('systeminformation');
 var config = {};
-var deviceId='';
-var devicePath='';
+var deviceId = '';
+var devicePath = '';
 
 // need to re-write the init function for each role (and the device) to return a list of subscriptions and handlers
-function init(device,emitter) {
-	deviceId= device.deviceId;
-	config=require("./config")(emitter);
+function init(device, emitter) {
+	deviceId = device.deviceId;
+	config = require("./config")(emitter);
 	devicePath = device.devicePath;
 	return {
 		timers : [
@@ -35,54 +35,55 @@ function init(device,emitter) {
 				handler : getHealth,
 			}
 		],
-		topics :{
-				upstream : [
-			{
-				"topic" : "C/" + devicePath,
-				"handler" : configMsg
-			},
-			{
-				"topic" : "H/" + devicePath,
-				"handler" : healthMsg
-			},
-			{
-				"topic" : "N/" + devicePath,
-				"handler" : handlerMsg
-			}
-		]
+		topics : {
+			upstream : [
+				{
+					"topic" : "C/" + devicePath,
+					"handler" : configMsg
+				},
+				{
+					"topic" : "H/" + devicePath,
+					"handler" : healthMsg
+				},
+				{
+					"topic" : "N/" + devicePath,
+					"handler" : handlerMsg
+				}
+			]
 		}
 	}
 }
 module.exports = {
-	init,
+	init ,
 	onBoard
 };
 
-function onBoard(configSettings,configObject){
+function onBoard(configSettings, configObject) {
 	//TODO: find an available MQTT broker, going to assume a dns record can be added for hiotmessaging.local)
-	
-	const mqtt=require("mqtt");
-	var obClient=mqtt.connect({
-		hostname:"127.0.0.1"
+
+	const mqtt = require("mqtt");
+	var obClient = mqtt.connect({
+		hostname : "127.0.0.1"
 	})
 	//send onboarding message
-	obClient.on("connect",() =>{
-		console.log("subscribed for onboarding")
+	obClient.on("connect", () => {
+		debug("subscribed for onboarding")
 		obClient.subscribe("O/" + configSettings.device.deviceId)
-		obClient.publish("o",JSON.stringify({"deviceId": configSettings.device.deviceId}))
+		obClient.publish("o", JSON.stringify({
+			"deviceId" : configSettings.device.deviceId
+		}))
 	});
-	obClient.on("message",(topic,message)=>{
-		console.log(message.toString())
+	obClient.on("message", (topic, message) => {
 		configObject.setConfig(message.toString())
 	});
 }
 
-function getHealth(messaging){
+function getHealth(messaging) {
 	debug("sending health information");
-	info.currentLoad((stats)=>{
-		messaging("h/" + devicePath,JSON.stringify(stats),1);
+	info.currentLoad((stats) => {
+		messaging("h/" + devicePath, JSON.stringify(stats), 1);
 	});
-	
+
 }
 
 function configMsg(message, topic, messaging) {
@@ -95,11 +96,11 @@ function configMsg(message, topic, messaging) {
 		messaging("c/" + devicePath, JSON.stringify(config.getConfig()));
 	}
 }
-function healthMsg(message,topic, messaging) {
-	 getHealth(messaging);
+function healthMsg(message, topic, messaging) {
+	getHealth(messaging);
 }
-function handlerMsg(message,topic, messaging) {
+function handlerMsg(message, topic, messaging) {
 	debug("handler messaging not yet implemented");
-	messaging("n" + devicePath,"handler messaging not yet implemented",1);
+	messaging("n" + devicePath, "handler messaging not yet implemented", 1);
 
 }
