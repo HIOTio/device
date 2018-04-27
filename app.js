@@ -145,7 +145,7 @@ function waitToClose(end) {
 
 	}
 	if (restarting) {
-		//really bad... need to refactor using something like async
+		//TODO really bad... need to refactor using something like async
 		if (messaging.connections["d"].connected || messaging.connections["u"].connected || messaging.connections["p"].connected || messaging.clients) {
 			debug("Waiting for brokers to close")
 			resetTimer = setTimeout(waitToClose, 3000)
